@@ -38,4 +38,15 @@ angular.module('myApp.controllers', []).
   .controller('TransCtrl', function($scope, Trans, User){
   	$scope.purchases = Trans.purchases;
   })
+  .controller('LogInCtrl', function($scope, User){
+    $scope.user = User;
+    $scope.email = '';
+    $scope.password = '';
+    $scope.logInError = false;
+    $scope.logIn = function(){
+      User.logIn($scope.email, $scope.password, function(response){
+        console.log(response);
+      });
+    };
+  })
   ;

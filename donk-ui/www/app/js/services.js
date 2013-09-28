@@ -37,7 +37,6 @@ angular.module('myApp.services', [])
         }
       ]
     };
-    console.log(service);
     return service;
 
   })
@@ -61,7 +60,6 @@ angular.module('myApp.services', [])
           'password': password
         },
       }).then(function(response){
-        console.log(response);
         service.email = response.data.email;
         service.isLoggedIn = true;
         service.userId = response.data._id;
@@ -77,3 +75,5 @@ angular.module('myApp.services', [])
 
     return service;
   })
+
+  ;
