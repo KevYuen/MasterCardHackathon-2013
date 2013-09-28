@@ -28,8 +28,10 @@ exports.create = function(req,res){
 exports.updateTrans = function(req, res){
 	var update = {$set:{}},
 		conditions = {_id: req.params.trans_id},
-		options = {multi: false};
-	if(req.body.action == "Modify"){
+		options = {multi: false},
+		action = req.body.action;
+
+	if(action == "Modify"){
 		if(req.body.recipient_id) update.$set.recipient_id = req.body.recipient_id;
 		if(req.body.amount) update.$set.amount = req.body.amount;
 		if(req.body.currency) update.$set.currency = req.body.currency;
@@ -45,7 +47,13 @@ exports.updateTrans = function(req, res){
 		}
 
 		Trans.update(conditions, update, options, callback);
-		
+	} else if (action == Start){
+		//start the transaction
+	} else {
+		//cancel the transaction
+		Trans.Remove(conditions, function(err){
+			if (err) res.send({error: err});
+			res.send({executionMessage: "Transaction Deleted"});
+		});
 	}
-
 }
