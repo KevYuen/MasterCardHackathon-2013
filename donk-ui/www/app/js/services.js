@@ -41,6 +41,39 @@ angular.module('myApp.services', [])
     return service;
 
   })
-  .factory('User', function(){
+  .factory('User', function($http){
     //data and functions related to logging in and out.
+
+    var service = {
+      isLoggedIn: false,
+      email: '',
+      userId: '',
+      cards: [],
+    };
+
+    var logIn = function(email, password, errorCallBack){
+      var url = 'http://ec2-54-227-22-178.compute-1.amazonaws.com/user/login';
+      $http({
+        method: 'POST',
+        url: url,
+        data: {
+          'email': email,
+          'password': password
+        },
+      }).then(function(response){
+        console.log(response);
+        service.email = response.data.email;
+        service.isLoggedIn = true;
+        service.userId = response.data._id;
+        service.cards = response.data.cards;
+      }, function(response){
+        errorCallBack(response);
+      });
+    };
+
+    service.logIn = logIn;
+
+    window.User = service;
+
+    return service;
   })

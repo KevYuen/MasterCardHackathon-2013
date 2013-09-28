@@ -7,7 +7,7 @@ angular.module('myApp.controllers', []).
 
   })
 
-  .controller('TransNewCtrl', function($scope) {
+  .controller('TransNewCtrl', function($scope, User) {
   	$scope.amount = '';
   	$scope.description = '';
 
@@ -32,10 +32,10 @@ angular.module('myApp.controllers', []).
   	};
   })
 
-  .controller('NavBarCtrl', function($scope, $location){
+  .controller('NavBarCtrl', function($scope, $location, User){
     $scope.location = $location;
   })
-  .controller('TransCtrl', function($scope, Trans){
+  .controller('TransCtrl', function($scope, Trans, User){
   	$scope.purchases = Trans.purchases;
   })
   ;
