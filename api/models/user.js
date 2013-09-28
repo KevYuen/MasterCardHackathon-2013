@@ -5,7 +5,15 @@ var mongoose = require('mongoose'),
 var user = new Schema({
 	email: String,
 	cards: [{cardNumber: Number, expiryMonth: Number, expiryDate: Number, requestId:{type:Number, default:0}}],
-	geoLocation:{type:Number, default:0},
+	geoLocation:
+		{	
+			"timestamp": Date,
+			"longitude": Number,
+			"latitude": Number,
+			"accuracy": Number,
+			"speed": Number,
+			"heading": Number
+		},
 	password: String,
 	address: String
 });
