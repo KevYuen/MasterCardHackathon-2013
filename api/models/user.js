@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
 
 var user = new Schema({
 	email: String,
-	cards: [{cardNumber: Number, expiryMonth: Number, expiryDate: Number, requestId:Number}],
+	cards: [{cardNumber: Number, expiryMonth: Number, expiryDate: Number, requestId:{type:Number, default:0}}],
 	geoLocation:{type:Number, default:0},
 	password: String,
 	address: String

@@ -32,3 +32,23 @@ exports.create = function(req,res){
 		res.send({executionMessage : 'user created'});
 	});
 }
+
+/*
+ * add a card to the user
+ * POST /user/:id/card/add
+ * server send: {cardNumber: Number, expiryMonth: Number, expiryDate: Number}
+ * server receive: {executionMessage: “card added”, cardID: String }
+ */
+exports.addCard = function(req,res){
+	User.findOne({_id: req.params.id}, function(err, user){
+		if (err) res.send({error: err});
+		//console.log(user);
+		user.cards.push(req.body);
+		var newCard = user.cards[0];
+		
+		user.save(function (err) {
+  			if (err) res.send({error: err});
+  			res.send({executionMessage : 'card added', cardID: newCard._id});
+		});
+	});
+}
