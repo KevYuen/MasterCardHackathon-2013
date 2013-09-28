@@ -11,5 +11,8 @@ angular.module('myApp.controllers', []).
   })
   .controller('NavBarCtrl', function($scope, $location){
     $scope.location = $location;
-
-  });
+  })
+  .controller('HistoryCtrl', function($scope, History){
+  	$scope.purchases = History.purchases;
+  })
+  ;
