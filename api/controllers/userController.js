@@ -30,7 +30,7 @@ exports.getUser = function(req,res){
 
 /*
  * create user
- * PUT - /user/create
+ * POST - /user/create
  * server receive: {email: String, password: String, address: String}
  * server send: {executionMessage: “user created”}
 */
@@ -42,13 +42,13 @@ exports.create = function(req,res){
 	user.password = req.body.password;
 	user.save(function(err, user){
 		if (err) res.send({error: err});
-		res.send({executionMessage : 'user created'});
+		res.send({executionMessage : 'user created', id: user._id});
 	});
 }
 
 /*
  * add a card to the user
- * POST /user/:id/card/add
+ * PUT /user/:id/card/add
  * server receive: {cardNumber: Number, expiryMonth: Number, expiryDate: Number}
  * server send: {executionMessage: “card added”, cardID: String }
  */
@@ -96,7 +96,7 @@ exports.getGeoLoc = function(req, res){
 
 /*
  * Updating the location of user
- * POST /user/:id/geo
+ * PUT /user/:id/geo
  * server receive : {loc: Number}
  * server send : {executionMessage: “Location Updated!"}
  */
@@ -109,7 +109,7 @@ exports.updateGeoLoc = function(req,res){
 
 /*
  * get a list of users that are close to the user
- * POST /user/:id/geo/close
+ * GET /user/:id/geo/close
  * server receive : {loc: Number}
  * server send : {"users:[ _id: String]"}
  */

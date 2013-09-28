@@ -20,7 +20,8 @@ app.configure(function(){
   	app.use(app.router);  	
 });
 
-var user = require("./controllers/userController.js");
+var user = require("./controllers/userController.js"),
+    trans = require("./controllers/transactionController.js");
 
 app.get("/", function(req, res){res.send("Welcome to the Donk's API");});
 
@@ -37,6 +38,9 @@ app.put("/user/:id/card/add", user.addCard);
 app.get("/user/:id/geo", user.getGeoLoc);
 app.put("/user/:id/geo/update", user.updateGeoLoc);
 app.get("/user/:id/geo/close", user.getCloseUsers);
+
+//transaction
+app.post("/user/:id/trans", trans.create);
 
 app.listen(3000);
 console.log('Express server listening on port 3000');
