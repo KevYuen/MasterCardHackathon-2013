@@ -42,6 +42,7 @@ app.get("/user/:id/geo/close", user.getCloseUsers);
 //transaction
 app.post("/user/:id/trans", trans.create);
 app.put("/user/:user_id/trans/:trans_id", trans.updateTrans);
+app.get("/user/:id/trans", trans.getTrans);
 
 app.listen(3000);
 console.log('Express server listening on port 3000');

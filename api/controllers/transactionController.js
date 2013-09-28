@@ -52,6 +52,7 @@ exports.updateTrans = function(req, res){
 		Trans.update(conditions, update, options, callback);
 	} else if (action == "Start"){
 		//start the transaction
+		//set the transaction as started
 		//set the status to Complete or Rejected
 	} else if (action == "Cancel"){
 		//cancel the transaction
@@ -62,4 +63,17 @@ exports.updateTrans = function(req, res){
 	} else {
 		res.send({error:"Invalid action"});
 	}
+}
+
+/*
+ * get all transaction started by user
+ * GET /user/id/trans
+ * Server receive: {}
+ * Server send: {trans: [transaction]}
+ */
+exports.getTrans = function(req, res){
+	Trans.find({senderID: req.params.id}, function(err, trans){
+		if (err) res.send({error: err});
+		res.send(trans);
+	});
 }
