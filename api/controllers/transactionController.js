@@ -32,7 +32,10 @@ exports.updateTrans = function(req, res){
 		action = req.body.action;
 
 	if(action == "Modify"){
-		if(req.body.recipient_id) update.$set.recipient_id = req.body.recipient_id;
+		if(req.body.recipient_id){ 
+			update.$set.recipient_id = req.body.recipient_id; 
+			update.$set.status = "Recipient Set";
+		}
 		if(req.body.amount) update.$set.amount = req.body.amount;
 		if(req.body.currency) update.$set.currency = req.body.currency;
 		if(req.body.description) update.$set.description = req.body.description;
@@ -49,6 +52,7 @@ exports.updateTrans = function(req, res){
 		Trans.update(conditions, update, options, callback);
 	} else if (action == "Start"){
 		//start the transaction
+		//set the status to Complete or Rejected
 	} else if (action == "Cancel"){
 		//cancel the transaction
 		Trans.remove(conditions, function(err){
