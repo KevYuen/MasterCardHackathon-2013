@@ -77,3 +77,26 @@ angular.module('myApp.services', [])
 
     return service;
   })
+  .factory('Geo', function() {
+    // Enables capture of geolocation data
+    var service = {
+      getLocation: function(onSuccess, onError) {
+        var onLocalSuccess = function( position ) {
+          var location = {
+            timestamp: position.timestamp,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+            speed: position.coords.speed,
+            heading: position.coords.heading
+          };
+          onSuccess( location );
+        };
+
+        // Proxies the PhoneGap geolocation API
+        navigator.geolocation.getCurrentPosition(onLocalSuccess, onError);
+      }
+    } 
+  
+    return service;
+  })
