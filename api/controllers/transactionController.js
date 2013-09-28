@@ -47,13 +47,15 @@ exports.updateTrans = function(req, res){
 		}
 
 		Trans.update(conditions, update, options, callback);
-	} else if (action == Start){
+	} else if (action == "Start"){
 		//start the transaction
-	} else {
+	} else if (action == "Cancel"){
 		//cancel the transaction
-		Trans.Remove(conditions, function(err){
+		Trans.remove(conditions, function(err){
 			if (err) res.send({error: err});
 			res.send({executionMessage: "Transaction Deleted"});
 		});
+	} else {
+		res.send({error:"Invalid action"});
 	}
 }
