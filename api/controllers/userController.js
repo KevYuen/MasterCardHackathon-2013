@@ -91,7 +91,7 @@ exports.getCards = function(req,res){
 exports.getGeoLoc = function(req, res){
 	User.findOne({_id: req.params.id}, function(err,userdata){
 		if(err) res.send({error:err});
-		res.send({loc: userdata.geoLocation});
+		res.send(userdata.geoLocation);
 	});
 }
 
@@ -102,7 +102,7 @@ exports.getGeoLoc = function(req, res){
  * server send : {executionMessage: “Location Updated!"}
  */
 exports.updateGeoLoc = function(req,res){
-	User.update({_id: req.params.id}, {$set: {geoLocation: req.body.loc}}, function(err){
+	User.update({_id: req.params.id}, {$set: {geoLocation: req.body}}, function(err){
 		if(err) res.send({error: err});
 		res.send({executionMessage: "Location Updated!"});
 	});
