@@ -4,15 +4,15 @@
       <form role="form">
         <div class="form-group">
           <label for="inputAmount" class="control-label">Amount</label>
-          <input type="text" class="form-control" id="inputAmount" placeholder="Amount">
+          <input type="text" class="form-control" id="inputAmount" placeholder="Amount" ng-model="amount">
         </div>
         <div class="form-group">
           <label for="inputDescription" class="control-label">Description</label>
-          <input type="text" class="form-control" id="inputDescription" placeholder="Description">
+          <input type="text" class="form-control" id="inputDescription" placeholder="Description" ng-model="description">
         </div>
-        <input type="submit" class="btn btn-success btn-block" value="Save" name="save" id="btnSave">
-        <input type="submit" class="btn btn-warning btn-block" value="Donk Now" name="donk" id="btnDonk">
-        <input type="submit" class="btn btn-danger btn-block" value="Cancel" name="cancel" id="btnCancel">
+        <input type="submit" class="btn btn-success btn-block" value="Save" name="save" id="btnSave" ng-click="save($event)">
+        <input type="submit" class="btn btn-warning btn-block" value="Donk Now" name="donk" id="btnDonk" ng-click="donk($event)">
+        <input type="submit" class="btn btn-danger btn-block" value="Cancel" name="cancel" id="btnCancel" ng-click="cancel($event)">
       </form>
   </div>
 </div>
