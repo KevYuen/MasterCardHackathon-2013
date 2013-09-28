@@ -20,5 +20,7 @@ app.configure(function(){
   	app.use(app.router);  	
 });
 
+app.get("/", function(req, res){res.send("Welcome to the Donk's API");});
+
 app.listen(3000);
 console.log('Express server listening on port 3000');
