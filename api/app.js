@@ -1,7 +1,8 @@
 var express = require('express'),
-  app = module.exports = express();
+    mongoose = require('mongoose'),
+    app = module.exports = express();
  
-mongoose.connect(process.env.Mongo|| "mongodb://localhost/KevBlog");
+mongoose.connect(process.env.Mongo|| "mongodb://localhost/mastercard");
 
 //cors middleware
 var allowCrossDomain = function(req, res, next) {
