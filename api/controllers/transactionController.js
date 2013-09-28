@@ -69,10 +69,23 @@ exports.updateTrans = function(req, res){
  * get all transaction started by user
  * GET /user/id/trans
  * Server receive: {}
- * Server send: {trans: [transaction]}
+ * Server send: [transaction]
  */
 exports.getTrans = function(req, res){
 	Trans.find({senderID: req.params.id}, function(err, trans){
+		if (err) res.send({error: err});
+		res.send(trans);
+	});
+}
+
+/*
+ * get transaction
+ * GET /trans/id
+ * Server receive: {}
+ * Server send: {transaction}
+ */
+exports.getSingleTrans = function(req, res){
+	Trans.findOne({_id: req.params.id}, function(err, trans){
 		if (err) res.send({error: err});
 		res.send(trans);
 	});
