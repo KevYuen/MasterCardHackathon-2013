@@ -7,7 +7,7 @@
 // In this case it is a simple value service.
 angular.module('myApp.services', [])
   .value('version', '0.1')
-  .factory('History', function(){
+  .factory('Trans', function(){
 
     var service = {
       purchases: [
@@ -40,4 +40,7 @@ angular.module('myApp.services', [])
     console.log(service);
     return service;
 
+  })
+  .factory('User', function(){
+    //data and functions related to logging in and out.
   })

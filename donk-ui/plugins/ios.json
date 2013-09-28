@@ -1,0 +1,1 @@
+{"prepare_queue":{"installed":[],"uninstalled":[]},"config_munge":{"config.xml":{"/*":{"<feature name=\"Accelerometer\"><param name=\"ios-package\" value=\"CDVAccelerometer\" /></feature>":1}}},"installed_plugins":{"org.apache.cordova.device-motion":{"PACKAGE_NAME":"com.spacebears.donk"}},"dependent_plugins":{}}
