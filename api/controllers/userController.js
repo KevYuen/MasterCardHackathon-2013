@@ -115,7 +115,14 @@ exports.updateGeoLoc = function(req,res){
  * server send : {"users:[ _id: String]"}
  */
 exports.getCloseUsers = function(req, res){
-	//TODO: this one is hard
+	User.update({_id: req.params.id}, {$set: {geoLocation: req.body}}, function(err){
+		if(err) res.send({error: err});
+	});
+
+	var timestamp = req.body.timestamp,
+		longitude = req.body.longitude;
+
+
 }
 
 
