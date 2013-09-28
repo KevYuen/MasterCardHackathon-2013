@@ -23,8 +23,12 @@ app.configure(function(){
 var user = require("./controllers/userController.js");
 
 app.get("/", function(req, res){res.send("Welcome to the Donk's API");});
+
+//user
+app.get("/user/:id", user.getUser);
 app.post("/user/login", user.login);
 app.post("/user/create", user.create);
+app.get("/user/:id/card", user.getCards);
 app.post("/user/:id/card/add", user.addCard);
 
 app.listen(3000);
