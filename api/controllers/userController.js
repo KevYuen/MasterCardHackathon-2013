@@ -8,7 +8,7 @@ var User = require('../models/user.js');
  * server send: {user}
  */
 exports.login = function(req,res){
-	User.findOne({username: req.body.username, password: req.body.password}, 
+	User.findOne({email: req.body.email, password: req.body.password}, 
 		function(err, userdata){
 			if(err) res.send({error: err});
 			if(userdata) res.send(userdata);
