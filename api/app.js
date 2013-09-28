@@ -27,15 +27,15 @@ app.get("/", function(req, res){res.send("Welcome to the Donk's API");});
 //user
 app.get("/user/:id", user.getUser);
 app.post("/user/login", user.login);
-app.put("/user/create", user.create);
+app.post("/user/create", user.create);
 
 //card
 app.get("/user/:id/card", user.getCards);
-app.post("/user/:id/card/add", user.addCard);
+app.put("/user/:id/card/add", user.addCard);
 
 //geo
 app.get("/user/:id/geo", user.getGeoLoc);
-app.post("/user/:id/geo", user.updateGeoLoc);
+app.put("/user/:id/geo/update", user.updateGeoLoc);
 app.get("/user/:id/geo/close", user.getCloseUsers);
 
 app.listen(3000);
