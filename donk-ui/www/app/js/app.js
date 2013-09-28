@@ -7,6 +7,6 @@ angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives', 
     $routeProvider.when('/view1', {templateUrl: 'partials/partial1.html', controller: 'MyCtrl1'});
     $routeProvider.when('/trans/new', {templateUrl: 'partials/trans_new.html', controller: 'TransNewCtrl'});
 
-    $routeProvider.when('/view3', {templateUrl: 'partials/partial2.html', controller: 'MyCtrl2'});
+    $routeProvider.when('/history', {templateUrl: 'partials/history.html', controller: 'HistoryCtrl'});
     $routeProvider.otherwise({redirectTo: '/view1'});
   }]);
