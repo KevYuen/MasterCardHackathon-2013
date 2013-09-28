@@ -107,3 +107,13 @@ exports.updateGeoLoc = function(req,res){
 	});
 }
 
+/*
+ * get a list of users that are close to the user
+ * POST /user/:id/geo/close
+ * server receive : {loc: Number}
+ * server send : {"users:[ _id: String]"}
+ */
+exports.getCloseUsers = function(req, res){
+	//TODO: this one is hard
+}
+

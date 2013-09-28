@@ -36,6 +36,7 @@ app.post("/user/:id/card/add", user.addCard);
 //geo
 app.get("/user/:id/geo", user.getGeoLoc);
 app.post("/user/:id/geo", user.updateGeoLoc);
+app.get("/user/:id/geo/close", user.getCloseUsers);
 
 app.listen(3000);
 console.log('Express server listening on port 3000');
