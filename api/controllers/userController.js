@@ -11,7 +11,8 @@ exports.login = function(req,res){
 	User.findOne({username: req.body.username, password: req.body.password}, 
 		function(err, userdata){
 			if(err) res.send({error: err});
-			res.send(userdata);
+			if(userdata) res.send(userdata);
+			res.send({error:"user not found"});
 	});
 }
 
