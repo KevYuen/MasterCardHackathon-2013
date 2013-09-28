@@ -30,7 +30,7 @@ exports.getUser = function(req,res){
 
 /*
  * create user
- * POST - /user/create
+ * PUT - /user/create
  * server receive: {email: String, password: String, address: String}
  * server send: {executionMessage: “user created”}
 */
@@ -69,8 +69,8 @@ exports.addCard = function(req,res){
 /*
  * get all the cards of a user
  * GET /user/:id/card
- * server send: {}
- * server receive: {cards: [card]}
+ * server receive: {}
+ * server send: {cards: [card]}
  */
 exports.getCards = function(req,res){
 	User.findOne({_id: req.params.id}, 
@@ -79,3 +79,31 @@ exports.getCards = function(req,res){
 			res.send({cards: userdata.cards});
 	});
 }
+
+
+/*
+ * GET the location of user
+ * GET /user/:id/geo
+ * server receive : {}
+ * server send : {loc: Number}
+ */
+exports.getGeoLoc = function(req, res){
+	User.findOne({_id: req.params.id}, function(err,userdata){
+		if(err) res.send({error:err});
+		res.send({loc: userdata.geoLocation});
+	});
+}
+
+/*
+ * Updating the location of user
+ * POST /user/:id/geo
+ * server receive : {loc: Number}
+ * server send : {executionMessage: “Location Updated!"}
+ */
+exports.updateGeoLoc = function(req,res){
+	User.update({_id: req.params.id}, {$set: {geoLocation: req.body.loc}}, function(err){
+		if(err) res.send({error: err});
+		res.send({executionMessage: "Location Updated!"});
+	});
+}
+
