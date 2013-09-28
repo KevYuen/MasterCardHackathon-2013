@@ -1,19 +1,18 @@
 <div class="container">
   <div class="row spacer">
     <div class="col-xs-12">
-      <form class="form-horizontal" role="form">
+      <form role="form">
         <div class="form-group">
-          <label for="inputAmount" class="col-xs-2 control-label">Amount</label>
-          <div class="col-xs-10">
-            <input type="text" class="form-control" id="inputAmount" placeholder="Amount">
-          </div>
+          <label for="inputAmount" class="control-label">Amount</label>
+          <input type="text" class="form-control" id="inputAmount" placeholder="Amount">
         </div>
         <div class="form-group">
-          <label for="inputDescription" class="col-xs-2 control-label">Description</label>
-          <div class="col-xs-10">
-            <input type="text" class="form-control" id="inputDescription" placeholder="Description">
-          </div>
+          <label for="inputDescription" class="control-label">Description</label>
+          <input type="text" class="form-control" id="inputDescription" placeholder="Description">
         </div>
+        <input type="submit" class="btn btn-success btn-block" value="Save" name="save" id="btnSave">
+        <input type="submit" class="btn btn-warning btn-block" value="Donk Now" name="donk" id="btnDonk">
+        <input type="submit" class="btn btn-danger btn-block" value="Cancel" name="cancel" id="btnCancel">
       </form>
   </div>
 </div>
