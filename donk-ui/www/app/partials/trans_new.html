@@ -14,5 +14,21 @@
         <input type="submit" class="btn btn-warning btn-block" value="Donk Now" name="donk" id="btnDonk" ng-click="donk($event)">
         <input type="submit" class="btn btn-danger btn-block" value="Cancel" name="cancel" id="btnCancel" ng-click="cancel($event)">
       </form>
+    </div>
+
+    <div class="row spacer">
+      <div class="col-xs-12">
+        <div ng-show="result" class="panel ng-class: { 'panel-success': result.success, 'panel-danger': !result.success };">
+          <div class="panel-heading">
+            <h3 class="panel-title">Result</h3>
+          </div>
+          <div class="panel-body">
+            <p ng-show="result.position">On {{ result.position.dateString }}, you were at {{ result.position.latitude }}, {{ result.position.longitude }} - accurate within a {{ result.position.accuracy }} meter radius.</p>
+
+            <p ng-show="result.trans">You setup a transaction for {{ result.trans.description }} of amount {{ result.trans.amount }}.</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
