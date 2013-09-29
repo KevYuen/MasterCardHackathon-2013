@@ -96,13 +96,18 @@ exports.updateTrans = function(req, res){
                     		receiver_card: recipient.cards[0].cardNumber,
                     		transaction_number: utils.getTransactionId()
                     	}
+                    	var template = utils.resolveTemplate('./templates/CreateTransferRequest.xml', data);
+                    	console.log(template);
 
                     	mc.post('sandbox.api.mastercard.com',
                     		'/moneysend/v1/transfer',
                     		{ "Format": "XML" },
-                    		utils.resolveTemplate('./templates/CreateTransferRequest.xml', data),
+                    		template,
                     		function(result){
                     			console.log("statusCode: " + result.statusCode);
+                    			result.on('data', function(d){
+                    				process.stdout.write(d);
+                    			});
                     			transCleanup(sender, recipient, trans, result.statusCode);
                     			res.status = result.statusCode;
                     			res.send(trans);
