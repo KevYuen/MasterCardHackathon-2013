@@ -70,10 +70,11 @@
   </div>
 
   <div ng-view></div>
-  <span style='color: red; font-size: 30px;' ng-show='accel.gamma > 150' >DONK!</span><br>
+  <span style='color: red; font-size: 30px;' ng-show='accel.gamma > 200' >DONK!</span><br>
   Gamma: {{accel.gamma}}<br>
   Alpha: {{accel.alpha}}<br>
   Beta: {{accel.beta}}<br>
+  Current Minimum Dot Product: {{accel.currentMin}}
   
 
   <script no-src="lib/json2/json2.js"></script>
