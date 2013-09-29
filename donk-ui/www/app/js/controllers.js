@@ -128,7 +128,7 @@ angular.module('myApp.controllers', []).
     });
 
   })
-  .controller('LogInCtrl', function($scope, User, API_DOMAIN){
+  .controller('LogInCtrl', function($scope, User, Trans, API_DOMAIN){
     $scope.email = '';
     $scope.password = '';
     $scope.logInError = false;
@@ -136,6 +136,7 @@ angular.module('myApp.controllers', []).
     $scope.logIn = function(){
       User.logIn($scope.email, $scope.password, function(response){
         console.log(response);
+        Trans.repeatedlyPoll();
       });
     };
     $scope.setRecieve = function(recieve){
@@ -143,6 +144,53 @@ angular.module('myApp.controllers', []).
       $scope.canRecieve = !!recieve;
     };  
   })
+
+  .controller( 'IncomingCtrl', function( $scope, $routeParams, User, Trans ) {
+  	$scope.error = false;
+
+  	Trans.getTransaction( $routeParams.transId ).then(
+  		function( data ) {
+  			$scope.trans = data;
+  		},
+  		function( data ) {
+  			$scope.error = data;
+  		}
+		);
+
+		$scope.send = function( e, sendMoney ) {
+			e && e.preventDefault();
+			// Must do this to avoid overwriting the current transaction
+			var backupTrans = jQuery.extend(true, {}, Trans.currentTransaction);
+			Trans.currentTransaction = $scope.trans;
+
+      var restoreTransaction = function() {
+        Trans.currentTransaction = backupTrans;
+        Trans.repeatedlyPoll();
+      };
+
+			var action = sendMoney ? "Start" : "Reject";
+
+			Trans.updateTransaction({ action: action }).then(
+				// Success
+				function( data ) {
+					console.log( action + ' successful for transaction' );
+          restoreTransaction();
+					window.location.hash = '#/trans';
+				},
+				// Error
+				function( data ) {
+					console.log( action + ' error' );
+          restoreTransaction();
+					$scope.error = data;
+				}
+			);
+		}
+
+    $scope.dismissError = function() {
+      $scope.error = false;
+    };
+  })
+
   .controller('SignUpCtrl', function($scope, API_DOMAIN, $http){
     $scope.signUp = function(){
       //Create the user
