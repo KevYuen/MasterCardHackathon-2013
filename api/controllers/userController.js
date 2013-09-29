@@ -123,14 +123,16 @@ exports.getCloseUsers = function(req, res){
 		var longitude = userdata.geoLocation.longitude,
 			latitude = userdata.geoLocation.latitude;
 			
-		User.find( { _id: {$ne: req.params.id}}, 'geoLocation', function(err, data){
+		User.find( { _id: {$ne: req.params.id}}, function(err, data){
 			if (err) errorhandler(res, err);
 			var coords = new Object();
 			var object;
 			for (var i = 0; i< data.length; i++){
-				object = {longitude: data[i].geoLocation.longitude, latitude: data[i].geoLocation.latitude};
-				//console.log(object);
-				coords[data[i]._id] = object;		
+				if (data[i].geoLocation.longitude && data[i].geoLocation.latitude){
+					object = {longitude: data[i].geoLocation.longitude, latitude: data[i].geoLocation.latitude};
+					//console.log(object);
+					coords[data[i]] = object;
+				}
 			}
 			console.log(coords);
 			var list = geolib.orderByDistance({latitude: latitude, longitude: longitude}, coords);
@@ -138,8 +140,11 @@ exports.getCloseUsers = function(req, res){
 				if(list[i].distance > 50){
 					list.splice(i, 1);
 					i--;
+				} else {
+					list[i].key = list[i].key.replace(/\n/g, "");
 				}
 			}
+
 			res.send(list);
 		});
 	});
