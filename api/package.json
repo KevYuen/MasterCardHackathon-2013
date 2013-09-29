@@ -5,6 +5,7 @@
   "dependencies": {
     "express": "",
     "mongoose":"",
-    "geolib": ""
+    "geolib": "",
+    "json":""
     }
 }

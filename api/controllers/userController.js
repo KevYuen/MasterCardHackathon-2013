@@ -131,17 +131,18 @@ exports.getCloseUsers = function(req, res){
 				if (data[i].geoLocation.longitude && data[i].geoLocation.latitude){
 					object = {longitude: data[i].geoLocation.longitude, latitude: data[i].geoLocation.latitude};
 					//console.log(object);
-					coords[data[i]] = object;
+					coords[JSON.stringify(data[i])] = object;
 				}
 			}
-			console.log(coords);
+			//console.log(coords);
 			var list = geolib.orderByDistance({latitude: latitude, longitude: longitude}, coords);
 			for(var i = 0; i < list.length; i++){
 				if(list[i].distance > 50){
 					list.splice(i, 1);
 					i--;
 				} else {
-					list[i].key = list[i].key.replace(/\n/g, "");
+					console.log(list[i].key);
+					list[i].key = JSON.parse(list[i].key);
 				}
 			}
 
