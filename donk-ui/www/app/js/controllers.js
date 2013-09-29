@@ -300,6 +300,9 @@ angular.module('myApp.controllers', []).
           }
         );
       });
-    }
+    };
+  })
+  .controller('BalanceCtrl', function($scope, User){
+    $scope.user = User;
   })
   ;

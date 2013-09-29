@@ -303,7 +303,7 @@ angular.module('myApp.services', [])
         service.isLoggedIn = true;
         service.userId = response.data._id;
         service.cards = response.data.cards;
-        service.recieve = response.data.recieve;
+        service.receive = response.data.receive;
         service.spend = response.data.spend;
 
         successCallback( response );
