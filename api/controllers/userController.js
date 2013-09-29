@@ -141,16 +141,17 @@ exports.getCloseUsers = function(req, res){
 			//console.log(coords);
 			var list = geolib.orderByDistance({latitude: latitude, longitude: longitude}, coords);
 			for(var i = 0; i < list.length; i++){
-                var date = new Date(list[i].timestamp);
-                console.log(date);
-                console.log(date.getTime());
-                
 				if(list[i].distance > 50){
 					list.splice(i, 1);
 					i--;
 				} else {
 					console.log(list[i].key);
 					list[i].key = JSON.parse(list[i].key);
+					var date = new Date(list[i].key.geoLocation.timestamp);
+                	if ((new Date()).getTime() - date.getTime() > 30000){
+                		list.splice(i, 1);
+						i--;
+                	}
 				}
 			}
 
