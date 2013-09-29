@@ -15,7 +15,7 @@ exports.create = function(req,res){
 	trans.description = req.body.description;
 	trans.geoLocation = req.body.geoLocation;
 	trans.save(function(err, newTrans){
-		if (err) res.send({error: err});
+		if (err) errorhandler(res, err);
 		res.send(newTrans);
 	});
 }
@@ -42,10 +42,13 @@ exports.updateTrans = function(req, res){
 		if(req.body.description) update.$set.description = req.body.description;
 
 		function callback(err, numdocs){
-			if (numdocs < 1 ) res.send({error: "Transaction not found"});
-			if (err) res.send({error:err});
+			if (numdocs < 1 ){
+				res.status(404);
+				res.send({error: "Transaction not found"});
+			}
+			if (err) errorhandler(res, err);
 			Trans.findOne(conditions, function(err, trans){
-				if(err) res.send({error:err});
+				if(err) errorhandler(res, err);
 				res.send(trans);
 			});
 		}
@@ -58,10 +61,11 @@ exports.updateTrans = function(req, res){
 	} else if (action == "Cancel"){
 		//cancel the transaction
 		Trans.remove(conditions, function(err){
-			if (err) res.send({error: err});
+			if (err) errorhandler(res, err);
 			res.send({executionMessage: "Transaction Deleted"});
 		});
 	} else {
+		res.status(400);
 		res.send({error:"Invalid action"});
 	}
 }
@@ -74,7 +78,7 @@ exports.updateTrans = function(req, res){
  */
 exports.getTrans = function(req, res){
 	Trans.find({senderID: req.params.id}, function(err, trans){
-		if (err) res.send({error: err});
+		if (err) errorhandler(res, err);
 		res.send(trans);
 	});
 }
@@ -87,7 +91,12 @@ exports.getTrans = function(req, res){
  */
 exports.getSingleTrans = function(req, res){
 	Trans.findOne({_id: req.params.id}, function(err, trans){
-		if (err) res.send({error: err});
+		if (err) errorhandler(res, err);
 		res.send(trans);
 	});
+}
+
+function errorhandler(res, err){
+	res.status(500);
+	res.send({error:err});
 }

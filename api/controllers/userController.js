@@ -11,8 +11,9 @@ var User = require('../models/user.js'),
 exports.login = function(req,res){
 	User.findOne({email: req.body.email, password: req.body.password}, 
 		function(err, userdata){
-			if(err) res.send({error: err});
+			if(err) errorhandler(res, err);
 			if(userdata) res.send(userdata);
+			res.status("404");
 			res.send({error:"user not found"});
 	});
 }
@@ -25,7 +26,7 @@ exports.login = function(req,res){
  */
 exports.getUser = function(req,res){
 	User.findOne({_id: req.params.id}, function(err,userdata){
-		if(err) res.send({error:err});
+		if(err) errorhandler(res, err);
 		res.send(userdata);
 	});
 }
@@ -43,7 +44,7 @@ exports.create = function(req,res){
 	user.address = req.body.address;
 	user.password = req.body.password;
 	user.save(function(err, user){
-		if (err) res.send({error: err});
+		if (err) errorhandler(res, err);
 		res.send({executionMessage : 'user created', id: user._id});
 	});
 }
@@ -56,13 +57,13 @@ exports.create = function(req,res){
  */
 exports.addCard = function(req,res){
 	User.findOne({_id: req.params.id}, function(err, user){
-		if (err) res.send({error: err});
+		if (err) errorhandler(res, err);
 		//console.log(user);
 		user.cards.push(req.body);
 		var newCard = user.cards[0];
 
 		user.save(function (err) {
-  			if (err) res.send({error: err});
+  			if (err) errorhandler(res, err);
   			res.send({executionMessage : 'card added', cardID: newCard._id});
 		});
 	});
@@ -77,7 +78,7 @@ exports.addCard = function(req,res){
 exports.getCards = function(req,res){
 	User.findOne({_id: req.params.id}, 
 		function(err, userdata){
-			if(err) res.send({error: err});
+			if(err) errorhandler(res, err);
 			res.send({cards: userdata.cards});
 	});
 }
@@ -91,7 +92,7 @@ exports.getCards = function(req,res){
  */
 exports.getGeoLoc = function(req, res){
 	User.findOne({_id: req.params.id}, function(err,userdata){
-		if(err) res.send({error:err});
+		if(err) errorhandler(res, err);
 		res.send(userdata.geoLocation);
 	});
 }
@@ -104,7 +105,7 @@ exports.getGeoLoc = function(req, res){
  */
 exports.updateGeoLoc = function(req,res){
 	User.update({_id: req.params.id}, {$set: {geoLocation: req.body}}, function(err){
-		if(err) res.send({error: err});
+		if(err) errorhandler(res, err);
 		res.send({executionMessage: "Location Updated!"});
 	});
 }
@@ -122,7 +123,7 @@ exports.getCloseUsers = function(req, res){
 			latitude = userdata.geoLocation.latitude;
 			
 		User.find( { _id: {$ne: req.params.id}}, 'geoLocation', function(err, data){
-			if (err) res.send({error: err});
+			if (err) errorhandler(res, err);
 			var coords = new Object();
 			var object;
 			for (var i = 0; i< data.length; i++){
@@ -141,4 +142,10 @@ exports.getCloseUsers = function(req, res){
 			res.send(list);
 		});
 	});
+}
+
+
+function errorhandler(res, err){
+	res.status(500);
+	res.send({error:err});
 }
