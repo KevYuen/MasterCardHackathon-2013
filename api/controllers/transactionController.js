@@ -96,12 +96,13 @@ exports.updateTrans = function(req, res){
                     		receiver_card: recipient.cards[0].cardNumber,
                     		transaction_number: utils.getTransactionId()
                     	}
-                    	
+
                     	mc.post('sandbox.api.mastercard.com',
                     		'/moneysend/v1/transfer',
                     		{ "Format": "XML" },
                     		utils.resolveTemplate('./templates/CreateTransferRequest.xml', data),
                     		function(result){
+                    			console.log("statusCode: " + result.statusCode);
                     			transCleanup(sender, recipient, trans, result.statusCode);
                     			res.status = result.statusCode;
                     			res.send(trans);
@@ -182,7 +183,7 @@ exports.getSingleTrans = function(req, res){
  * Server send : {trans}
  */
 exports.pollRequests = function(req, res){
-	Trans.findOne({senderId: req.params.id}, function(err, trans){
+	Trans.findOne({senderId: req.params.id, status: "Sender Set"}, function(err, trans){
 		if (err) errorhandler(res, err);
 		res.send(trans);
 	});
