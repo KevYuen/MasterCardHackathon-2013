@@ -143,16 +143,23 @@ angular.module('myApp.controllers', []).
     $scope.password = '';
     $scope.logInError = false;
     $scope.canRecieve = true;
+    $scope.showSignUp = false;
+
     $scope.logIn = function(){
       User.logIn($scope.email, $scope.password, function(response){
         console.log(response);
         Trans.repeatedlyPoll();
+        Geo.repeatedlyUpdateLocation();        
       });
     };
     $scope.setRecieve = function(recieve){
       //make into boolean
       $scope.canRecieve = !!recieve;
-    };  
+    };
+    $scope.displaySignUp = true;
+    $scope.hideSignUp = function(){
+      $scope.displaySignUp = false;
+    }
   })
 
   .controller( 'IncomingCtrl', function( $scope, $routeParams, User, Trans ) {
@@ -233,6 +240,8 @@ angular.module('myApp.controllers', []).
       $scope.error = JSON.stringify( errData, undefined, 2 );
     };
 
+    
+
     Trans.pollForDonkResponse(
       // Success
       function( data ) {
@@ -281,9 +290,15 @@ angular.module('myApp.controllers', []).
       })
       //Sign in
       .then(function(response){
-        User.logIn($scope.email, $scope.password, function(response){
-          console.log(response);
-        });
+        User.logIn($scope.email, $scope.password,
+          function() {
+            Trans.repeatedlyPoll();
+            Geo.repeatedlyUpdateLocation(); 
+          },
+          function(response){
+            console.log(response);
+          }
+        );
       });
     }
   })
