@@ -119,7 +119,11 @@ exports.updateGeoLoc = function(req,res){
  */
 exports.getCloseUsers = function(req, res){
 	User.findOne({_id: req.params.id}, function(err, userdata){
-
+		if (err) errorhandler(res, err);
+		if(userdata == null){
+			res.status(500);
+			res.send({error: "No one else is here"});
+		}
 		var longitude = userdata.geoLocation.longitude,
 			latitude = userdata.geoLocation.latitude;
 			
