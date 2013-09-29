@@ -80,6 +80,7 @@ exports.updateTrans = function(req, res){
                 if(err) errorhandler(res, err);
                 User.findOne({_id: trans.recipientId}, function(err, recipient){
                     if(err) errorhandler(res, err);
+                    try{
                     var data = {
                                     hours: utils.getHours(),
                                     minutes: utils.getMinutes(),
@@ -105,6 +106,10 @@ exports.updateTrans = function(req, res){
                     	res.status = result.statusCode;
                     	res.send(trans);
                     });
+                }catch(e){
+                	res.status(500);
+                	res.send({error:"T.T someone broke"});
+                }
                 });        
              });
         }); 
