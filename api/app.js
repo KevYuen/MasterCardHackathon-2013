@@ -30,6 +30,7 @@ app.get("/", function(req, res){res.send("Welcome to the Donk's API");});
 app.get("/user/:id", user.getUser);
 app.post("/user/login", user.login);
 app.post("/user/create", user.create);
+app.put("/user/:id/photo", user.updatePhoto);
 
 //card
 app.get("/user/:id/card", user.getCards);

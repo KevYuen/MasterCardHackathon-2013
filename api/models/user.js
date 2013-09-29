@@ -15,7 +15,7 @@ var user = new Schema({
 			speed: Number,
 			heading: Number
 		},
-	photo: String,
+	photo: {type:String, default:null},
 	password: String,
 	address: String,
 	spend: {type:Number, default: 0},

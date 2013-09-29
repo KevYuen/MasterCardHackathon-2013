@@ -145,6 +145,18 @@ exports.getCloseUsers = function(req, res){
 	});
 }
 
+/*
+ * upload a photo for the user
+ * PUT /user/:id/photo
+ * server receive : {photo: String}
+ * server send : {executionMessage: "photo Uploaded!"}
+ */
+exports.updatePhoto = function(req, res){
+	User.update({_id: req.params.id}, {$set: {photo: req.body.photo}}, function(err){
+		if(err) errorhandler(res, err);
+		res.send({executionMessage: "photoUploaded!"});
+	});
+}
 
 function errorhandler(res, err){
 	res.status(500);
