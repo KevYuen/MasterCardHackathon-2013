@@ -143,10 +143,13 @@ angular.module('myApp.controllers', []).
     $scope.password = '';
     $scope.logInError = false;
     $scope.canRecieve = true;
+    $scope.showSignUp = false;
+
     $scope.logIn = function(){
       User.logIn($scope.email, $scope.password, function(response){
         console.log(response);
         Trans.repeatedlyPoll();
+        Geo.repeatedlyUpdateLocation();        
       });
     };
     $scope.setRecieve = function(recieve){
@@ -281,9 +284,15 @@ angular.module('myApp.controllers', []).
       })
       //Sign in
       .then(function(response){
-        User.logIn($scope.email, $scope.password, function(response){
-          console.log(response);
-        });
+        User.logIn($scope.email, $scope.password,
+          function() {
+            Trans.repeatedlyPoll();
+            Geo.repeatedlyUpdateLocation(); 
+          },
+          function(response){
+            console.log(response);
+          }
+        );
       });
     }
   })

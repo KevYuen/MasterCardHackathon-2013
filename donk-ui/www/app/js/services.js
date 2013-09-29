@@ -301,6 +301,7 @@ angular.module('myApp.services', [])
         service.isLoggedIn = true;
         service.userId = response.data._id;
         service.cards = response.data.cards;
+
         successCallback( response );
       }, function(response){
         errorCallBack(response);
@@ -394,6 +395,13 @@ angular.module('myApp.services', [])
         this.getDeviceLocation().then(onSuccess, onError);
 
         return deferred.promise;
+      },
+
+      repeatedlyUpdateLocation: function() {
+        var that = this;
+        var intervalHandler = setInterval(function() {
+          that.saveLocation();
+        }, 10000);
       }
     } 
 
