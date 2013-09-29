@@ -8,28 +8,28 @@ angular.module('myApp.controllers', []).
   })
 
   .controller('TransNewCtrl', function($scope, Geo, User) {
-  	$scope.amount = '';
-  	$scope.description = '';
+    $scope.amount = '';
+    $scope.description = '';
     $scope.position = false;
     $scope.result = false;
 
-  	$scope.save = function( e ) {
-  		console.log( 'Save clicked' );  		
+    $scope.save = function( e ) {
+      console.log( 'Save clicked' );      
       createTransaction();
-  	};
+    };
 
-  	$scope.donk = function( e ) {
-  		console.log( 'Donk clicked' );
+    $scope.donk = function( e ) {
+      console.log( 'Donk clicked' );
       $scope.save( e );
       getLocation();
       startTransaction();
-  	};
+    };
 
-  	$scope.cancel = function( e ) {
-  		console.log( 'Cancel clicked' );
-  		$scope.amount = '';
-  		$scope.description = '';
-  	};
+    $scope.cancel = function( e ) {
+      console.log( 'Cancel clicked' );
+      $scope.amount = '';
+      $scope.description = '';
+    };
 
     var createTransaction = function() {
       // TODO: validate amount to be rounded to 2 decimal places
@@ -79,17 +79,32 @@ angular.module('myApp.controllers', []).
     $scope.location = $location;
   })
   .controller('TransCtrl', function($scope, Trans, User){
-  	$scope.purchases = Trans.purchases;
+    $scope.purchases = Trans.purchases;
+  })
+  .controller('AppCtrl', function($scope, User){
+    $scope.user = User;
+
   })
   .controller('LogInCtrl', function($scope, User){
-    $scope.user = User;
     $scope.email = '';
     $scope.password = '';
     $scope.logInError = false;
+    $scope.canRecieve = true;
     $scope.logIn = function(){
       User.logIn($scope.email, $scope.password, function(response){
         console.log(response);
       });
     };
+    $scope.setRecieve = function(recieve){
+      //make into boolean
+      $scope.canRecieve = !!recieve;
+    };  
+  })
+  .controller('SignUpCtrl', function($scope){
+    $scope.signUp = function(){
+      //Create the user
+      //Add the credit card
+      //Sign in
+    }
   })
   ;

@@ -18,26 +18,45 @@
     background-color: white;
     padding: 10px;
   }
+  [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+  }
   </style>
 </head>
-<body ng-cloak ng-controller='LogInCtrl'>
-  <div class='fullscreen' ng-hide='user.isLoggedIn'>
+<body ng-cloak ng-controller='AppCtrl'>
+  <div class='fullscreen' ng-hide='user.isLoggedIn' ng-controller="LogInCtrl">
     <form role='form'>
       <div class='form-group'>
-    <label>Email:</label><input type='text' class="form-control" ng-model='email'><br>
-    <label>Password:</label> <input type='text' class="form-control" ng-model='password'><br>
-    <button class='btn btn-primary btn-block' ng-click='logIn()'>Log In</button>
-    </div>
+      <label>Email:</label><input type='text' class="form-control" ng-model='email'><br>
+      <label>Password:</label> <input type='text' class="form-control" ng-model='password'><br>
+      <button class='btn btn-primary btn-block' ng-click='logIn()'>Log In</button>
+      </div>
     </form>
 
-  </div>
-  <div class="container">
-    <div class='row' ng-controller="NavBarCtrl">
-        <div class='col-xs-12'>
-        <div class='btn-group btn-group-justified'>
-          <a class="btn btn-default" ng-class="{active: location.path() == '/view1'} " href='#/view1'>Balance</a>
-          <a class="btn btn-default" ng-class="{active: location.path() == '/trans/new'} " href='#/trans/new'>Create Transaction</a>
-          <a class="btn btn-default" ng-class="{active: location.path() == '/trans'} " href='#/trans'>History</a>
+    <div ng-controller="SignUpCtrl">
+      <button class='btn btn-info' ng-click='showSignUp = !showSignUp'>Sign Up</button>
+
+      <div ng-show='showSignUp'>
+        <form>
+          <div class='form-group'>
+            <label>Email:</label><input type='text' class="form-control" ng-model='signup.email'><br>
+            <label>Password:</label> <input type='text' class="form-control" ng-model='signup.password'><br>
+          </div>
+          <div class='form-group'>
+            <label>Credit Card #:</label><input type='text' class="form-control" ng-model='signup.creditCard'><br>
+            <label>Expiry:</label> <input type='text' class="form-control" ng-model='signup.expiry' ng-pattern='/\d\d\/\d\d/' placeholder='MM/YY'><br>
+          </div>
+      </div>
+
+    </div>
+    <div class="container">
+      <div class='row' ng-controller="NavBarCtrl">
+          <div class='col-xs-12'>
+          <div class='btn-group btn-group-justified'>
+            <a class="btn btn-default" ng-class="{active: location.path() == '/view1'} " href='#/view1'>Balance</a>
+            <a class="btn btn-default" ng-class="{active: location.path() == '/trans/new'} " href='#/trans/new'>Create Transaction</a>
+            <a class="btn btn-default" ng-class="{active: location.path() == '/trans'} " href='#/trans'>History</a>
+          </div>
         </div>
       </div>
     </div>
