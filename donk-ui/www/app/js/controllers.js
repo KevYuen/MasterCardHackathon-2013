@@ -12,6 +12,19 @@ angular.module('myApp.controllers', []).
     $scope.description = '';
     $scope.position = false;
     $scope.result = false;
+    $scope.loggedIn = User.loggedIn;
+
+    // Force a login when this is created
+    if ( !User.loggedIn ) {
+      User.logIn( 'abc@abc.com', 'beer',
+        function() { // Login success
+          console.log( 'Logged in successfully' );
+        },
+        function( response ) { // Login failed
+          console.log( 'Login Error: ' + JSON.stringify( response, undefined, 2 ) );
+        }
+      );      
+    }
 
     $scope.save = function( e ) {
       console.log( 'Save clicked' );      
@@ -21,7 +34,6 @@ angular.module('myApp.controllers', []).
     $scope.donk = function( e ) {
       console.log( 'Donk clicked' );
       $scope.save( e );
-      getLocation();
       startTransaction();
     };
 
@@ -41,37 +53,35 @@ angular.module('myApp.controllers', []).
       };
 
       // TODO: make API calls (via Service) to create transaction on server
-    }
+    };
 
-    var getLocation = function() {
-      // TODO: persist location via API call to server
-
+    var startTransaction = function() {
+      // Save Location -> Start transaction on success
       var onSuccess = function( position ) {
         console.log( 'Geolocation success: (' + position.latitude + ', ' + position.longitude + ')' );
         var date = new Date( ~~position.timestamp ),
           dateString = date.toLocaleString();
-        $scope.$apply(function() {
+
+        // $scope.$apply(function() {
           position.dateString = dateString;
           $scope.result = $scope.result || { success: true };
           $scope.result.position = position;
-        });
+        // });
+
+        // TODO: initiate actual transaction process here
+        console.log( 'Should make API call to start transaction now' );
       };
 
       var onError = function( error ) {
         console.log( 'Geolocation error: ' + JSON.stringify( error ) );
-        $scope.$apply(function() {
+        // $scope.$apply(function() {
           $scope.result = $scope.result || {};
           $scope.result.success = false;
           $scope.position = error;
-        });
+        // });
       };
 
-      Geo.getLocation( onSuccess, onError );
-    }
-
-    var startTransaction = function() {
-      console.log( 'Should make API call to start transaction now' );
-      // TODO: initiate actual transaction process here
+      Geo.saveLocation( User, onSuccess, onError );
     };
   })
 
