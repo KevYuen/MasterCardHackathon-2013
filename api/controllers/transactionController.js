@@ -122,12 +122,26 @@ exports.updateTrans = function(req, res){
 
 /*
  * get all transaction started by user
- * GET /user/id/trans
+ * GET /user/id/trans/recipient
  * Server receive: {}
  * Server send: [transaction]
  */
-exports.getTrans = function(req, res){
+exports.getTransRecipient = function(req, res){
 	Trans.find({recipientId: req.params.id}, function(err, trans){
+		if (err) errorhandler(res, err);
+		res.send(trans);
+	});
+}
+
+
+/*
+ * get all transaction started by user
+ * GET /user/id/trans/sender
+ * Server receive: {}
+ * Server send: [transaction]
+ */
+exports.getTransSender = function(req, res){
+	Trans.find({senderId: req.params.id}, function(err, trans){
 		if (err) errorhandler(res, err);
 		res.send(trans);
 	});

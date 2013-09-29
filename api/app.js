@@ -46,7 +46,8 @@ app.get("/user/:id/geo/close", user.getCloseUsers);
 //transaction
 app.post("/user/:id/trans", trans.create);
 app.put("/user/:user_id/trans/:trans_id", trans.updateTrans);
-app.get("/user/:id/trans", trans.getTrans);
+app.get("/user/:id/trans/recipient", trans.getTransRecipient);
+app.get("/user/:id/trans/sender", trans.getTransSender);
 app.get("/trans/:id", trans.getSingleTrans);
 app.get("/user/:id/poll", trans.pollRequests);
 
