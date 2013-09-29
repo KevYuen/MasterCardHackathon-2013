@@ -24,16 +24,12 @@ angular.module('myApp.controllers', []).
       .then(
         // Success
         function( resp ) {
-          console.log( 'Transaction created: ' );
-          console.log( JSON.stringify( resp, undefined, 2 )  );
-
           resp.success = true;
           $scope.result = resp;
         },
 
         // Error
         function( resp ) {
-          console.log( 'Error TransNewCtrl: ' + JSON.stringify( resp, undefined, 2 ) );
           resp.success = false;
           $scope.result = resp;
         }
@@ -47,9 +43,6 @@ angular.module('myApp.controllers', []).
       .then(
         // Success
         function( resp ) {
-          console.log( 'Transaction created: ' );
-          console.log( JSON.stringify( resp, undefined, 2 )  );
-
           var date = new Date( resp.position.timestamp ),
             dateString = date.toLocaleString();
           resp.position.dateString = dateString;
@@ -63,11 +56,8 @@ angular.module('myApp.controllers', []).
 
         // Error
         function( resp ) { 
-          console.log( 'Error TransNewCtrl: ' + JSON.stringify( resp, undefined, 2 ) );
-          $scope.$apply(function() {
-            resp.success = false;
-            $scope.result = resp;
-          });
+          resp.success = false;
+          $scope.result = resp;
         }
       );
     };

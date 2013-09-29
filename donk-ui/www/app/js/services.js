@@ -23,7 +23,6 @@ angular.module('myApp.services', [])
           that = this;
 
         var onSuccess = function( position ) {
-          console.log( 'Geolocation success: (' + position.latitude + ', ' + position.longitude + ')' );
           result.position = position;
           deferred.notify( result );
 
@@ -135,6 +134,8 @@ angular.module('myApp.services', [])
     var service = {
       getDeviceLocation: function(onSuccess, onError) {
         var onLocalSuccess = function( position ) {
+          console.log( 'getDeviceLocation success: ' );
+          console.log( JSON.stringify( position, undefined, 2 ) );
           var location = {
             timestamp: position.timestamp,
             latitude: position.coords.latitude,
@@ -164,7 +165,8 @@ angular.module('myApp.services', [])
             data: position
           })
           .success( function( data ) {
-            console.log( 'Success saving location' );
+            console.log( 'saveLocation success: ' );
+            console.log( JSON.stringify( data, undefined, 2 ) );
             // Pre-process server response here and return data expected - nothing for now
             onSuccess && onSuccess( position );
           })
