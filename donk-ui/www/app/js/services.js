@@ -51,7 +51,7 @@ angular.module('myApp.services', [])
       cards: [],
     };
 
-    var logIn = function(email, password, errorCallBack){
+    var logIn = function(email, password, successCallback, errorCallBack){
       var url = API_DOMAIN + '/user/login';
       $http({
         method: 'POST',
@@ -65,6 +65,7 @@ angular.module('myApp.services', [])
         service.isLoggedIn = true;
         service.userId = response.data._id;
         service.cards = response.data.cards;
+        successCallback( response );
       }, function(response){
         errorCallBack(response);
       });
@@ -76,10 +77,10 @@ angular.module('myApp.services', [])
 
     return service;
   })
-  .factory('Geo', function() {
+  .factory('Geo', function($http) {
     // Enables capture of geolocation data
     var service = {
-      getLocation: function(onSuccess, onError) {
+      getDeviceLocation: function(onSuccess, onError) {
         var onLocalSuccess = function( position ) {
           var location = {
             timestamp: position.timestamp,
@@ -94,6 +95,33 @@ angular.module('myApp.services', [])
 
         // Proxies the PhoneGap geolocation API
         navigator.geolocation.getCurrentPosition(onLocalSuccess, onError);
+      },
+
+      saveLocation: function( user, onSuccess, onError ) {
+        // TODO: Convert this method to return a promise object
+
+        var onLocalSuccess = function( position ) {
+          var rootUrl = 'http://ec2-54-227-22-178.compute-1.amazonaws.com',
+            url = rootUrl + '/user/' + user.userId + '/geo/update';
+
+          $http({
+            method: 'PUT',
+            url: url,
+            data: position
+          })
+          .success( function( data ) {
+            console.log( 'Success saving location' );
+            // Pre-process server response here and return data expected - nothing for now
+            onSuccess && onSuccess( position );
+          })
+          .error( function( data ) {
+            console.log( 'Error saving location - server sent back: ' );
+            console.log( JSON.stringify( data, undefined, 2 ) );
+            onError && onError( data );
+          });
+        };
+
+        this.getDeviceLocation(onLocalSuccess, onError);
       }
     } 
 
