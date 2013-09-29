@@ -85,6 +85,28 @@ angular.module('myApp.services', [])
         return deferred.promise;
       },
 
+      getClosestBuyers: function() {
+        var deferred = $q.defer(),
+          url = API_DOMAIN + '/user/' + User.userId + '/geo/close';
+
+        $http({
+          method: 'GET',
+          url: url
+        })
+        .success( function( data ) {
+          console.log( 'getClosestBuyers success: ' );
+          console.log( JSON.stringify( data, undefined, 2 ) );
+          deferred.resolve( data );
+        })
+        .error( function( data ) {
+          console.log( 'getClosestBuyers error: ' );
+          console.log( JSON.stringify( data, undefined, 2 ) );
+          deferred.reject( data );
+        });
+
+        return deferred.promise;
+      },
+
       transactions: [
         {
           amount: 350,
