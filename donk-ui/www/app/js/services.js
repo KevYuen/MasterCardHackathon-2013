@@ -80,7 +80,7 @@ angular.module('myApp.services', [])
           deferred.reject( data );
         };
 
-        Geo.saveLocation( onSuccess, onError );
+        Geo.saveLocation().then( onSuccess, onError );
 
         return deferred.promise;
       },
@@ -174,11 +174,13 @@ angular.module('myApp.services', [])
 
     return service;
   })
-  .factory('Geo', function( $http, API_DOMAIN, User ) {
+  .factory('Geo', function( $q, $http, API_DOMAIN, User ) {
     // Enables capture of geolocation data
     var service = {
-      getDeviceLocation: function(onSuccess, onError) {
-        var onLocalSuccess = function( position ) {
+      getDeviceLocation: function() {
+      	var deferred = $q.defer();
+
+        var onSuccess = function( position ) {
           console.log( 'getDeviceLocation success: ' );
           console.log( JSON.stringify( position, undefined, 2 ) );
           var location = {
@@ -189,19 +191,24 @@ angular.module('myApp.services', [])
             speed: position.coords.speed,
             heading: position.coords.heading
           };
-          onSuccess( location );
+          // onSuccess( location );
+          deferred.resolve( location );
+        };
+
+        var onError = function( resp ) {
+        	deferred.reject( resp );
         };
 
         // Proxies the PhoneGap geolocation API
-        navigator.geolocation.getCurrentPosition(onLocalSuccess, onError);
+        navigator.geolocation.getCurrentPosition(onSuccess, onError);
+
+        return deferred.promise;
       },
 
-      saveLocation: function( onSuccess, onError ) {
-        // TODO: Convert this method to return a promise object
+      saveLocation: function() {
+				var deferred = $q.defer();
 
-        // TODO: Add User service to Geo service - check for user status before attempting save
-
-        var onLocalSuccess = function( position ) {
+        var onSuccess = function( position ) {
           var url = API_DOMAIN + '/user/' + User.userId + '/geo/update';
 
           $http({
@@ -213,16 +220,22 @@ angular.module('myApp.services', [])
             console.log( 'saveLocation success: ' );
             console.log( JSON.stringify( data, undefined, 2 ) );
             // Pre-process server response here and return data expected - nothing for now
-            onSuccess && onSuccess( position );
+            deferred.resolve( position );
           })
           .error( function( data ) {
             console.log( 'Error saving location - server sent back: ' );
             console.log( JSON.stringify( data, undefined, 2 ) );
-            onError && onError( data );
+            deferred.reject( data );
           });
         };
 
-        this.getDeviceLocation(onLocalSuccess, onError);
+        var onError = function( resp ) {
+        	deferred.reject( resp );
+        }
+
+        this.getDeviceLocation().then(onSuccess, onError);
+
+        return deferred.promise;
       }
     } 
 
