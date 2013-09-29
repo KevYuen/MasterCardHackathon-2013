@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TransferRequest>
+   <LocalDate>{month}{day}</LocalDate>
+   <LocalTime>{hours}{minutes}{seconds}</LocalTime>
+   <TransactionReference>{transactionNumber}</TransactionReference>
+   <SenderName>{sender_name}</SenderName>
+   <SenderAddress>
+      <Line1>123 Main Street</Line1>
+      <City>Arlington</City>
+      <CountrySubdivision>VA</CountrySubdivision>
+      <PostalCode>22207</PostalCode>
+      <Country>USA</Country>
+   </SenderAddress>
+   <FundingCard>
+      <AccountNumber>{sender_card}</AccountNumber>
+      <ExpiryMonth>{sender_month}</ExpiryMonth>
+      <ExpiryYear>{sender_year}</ExpiryYear>
+   </FundingCard>
+   <FundingUCAF>MjBjaGFyYWN0ZXJqdW5rVUNBRjU=1111</FundingUCAF>
+   <FundingAmount>
+      <Value>{amount}</Value>
+      <Currency>840</Currency>
+   </FundingAmount>
+   <ReceiverName>{receiver_name}</ReceiverName>
+   <ReceiverAddress>
+      <Line1>Pueblo Street</Line1>
+      <Line2>PO BOX 12</Line2>
+      <City>El PASO</City>
+      <CountrySubdivision>TX</CountrySubdivision>
+      <PostalCode>79906</PostalCode>
+      <Country>USA</Country>
+   </ReceiverAddress>
+   <ReceivingCard>
+      <AccountNumber>{receiver_card}</AccountNumber>
+   </ReceivingCard>
+   <ReceivingAmount>
+      <Value>{amount}</Value>
+      <Currency>840</Currency>
+   </ReceivingAmount>
+   <Channel>W</Channel>
+   <UCAFSupport>true</UCAFSupport>
+   <ICA>009674</ICA>
+   <ProcessorId>9000000442</ProcessorId>
+   <RoutingAndTransitNumber>990442082</RoutingAndTransitNumber>
+   <CardAcceptor>
+      <Name>My Local Bank</Name>
+      <City>Saint Louis</City>
+      <State>MO</State>
+      <PostalCode>63101</PostalCode>
+      <Country>USA</Country>
+   </CardAcceptor>
+</TransferRequest>
+

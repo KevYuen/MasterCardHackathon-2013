@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CreateMappingRequest>
+    <SubscriberId>test1234@gmail.com</SubscriberId>
+    <SubscriberType>EMAIL_ADDRESS</SubscriberType>
+    <AccountUsage>SENDING</AccountUsage>
+    <DefaultIndicator>T</DefaultIndicator>
+    <Alias>My Debit Card</Alias>
+    <ICA>009674</ICA>
+    <AccountNumber>5184680430000022</AccountNumber>
+    <ExpiryDate>201310</ExpiryDate>
+    <CardholderName>Joe Smith</CardholderName>
+    <Address>
+            <Line1>100 Main Street</Line1>
+            <City>OFallon</City>
+            <CountrySubdivision>MO</CountrySubdivision>
+            <PostalCode>63368</PostalCode>
+            <Country>USA</Country>
+    </Address>
+</CreateMappingRequest>
