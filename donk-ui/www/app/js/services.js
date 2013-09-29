@@ -7,9 +7,62 @@
 // In this case it is a simple value service.
 angular.module('myApp.services', [])
   .value('version', '0.1')
-  .factory('Trans', function(){
+  .factory('Trans', function( $q, $http, API_DOMAIN, User, Geo ){
 
     var service = {
+      currentTransaction: {
+        amount: null,
+        currency: 'CAD',
+        description: '',
+        geoLocation: null
+      },
+
+      createTransaction: function( amount, description ) {
+        var result = { position: null, transaction: null, error: false },
+          deferred = $q.defer(),
+          that = this;
+
+        var onSuccess = function( position ) {
+          console.log( 'Geolocation success: (' + position.latitude + ', ' + position.longitude + ')' );
+          result.position = position;
+          deferred.notify( result );
+
+          var transaction = {
+            amount: amount,
+            currency: 'CAD', // TODO: Figure out a way NOT to hard code this...
+            description: description,
+            geoLocation: position
+          };
+
+          var url = API_DOMAIN + '/user/' + User.userId + '/trans';
+          $http({
+            method: 'POST',
+            url: url,
+            data: transaction
+          })
+          .success( function( data ) {
+            console.log( 'Transaction created: ' + JSON.stringify( data, undefined, 2 ) );
+            that.currentTransaction = data;
+            result.transaction = data;
+            deferred.resolve( result );
+          })
+          .error( function( data ) {
+            console.log( 'Error creating transaction: ' + JSON.stringify( data, undefined, 2 ) );
+            result.error = data;
+            deferred.reject( result );
+          });
+        };
+
+        var onError = function( data ) {
+          console.log( 'createTransaction - location save failed' );
+          deferred.reject( data );
+        };
+
+        Geo.saveLocation( onSuccess, onError );
+
+        return deferred.promise;
+      },
+
       purchases: [
         {
           amount: 350,
@@ -77,7 +130,7 @@ angular.module('myApp.services', [])
 
     return service;
   })
-  .factory('Geo', function($http, API_DOMAIN) {
+  .factory('Geo', function( $http, API_DOMAIN, User ) {
     // Enables capture of geolocation data
     var service = {
       getDeviceLocation: function(onSuccess, onError) {
@@ -97,13 +150,13 @@ angular.module('myApp.services', [])
         navigator.geolocation.getCurrentPosition(onLocalSuccess, onError);
       },
 
-      saveLocation: function( user, onSuccess, onError ) {
+      saveLocation: function( onSuccess, onError ) {
         // TODO: Convert this method to return a promise object
 
         // TODO: Add User service to Geo service - check for user status before attempting save
 
         var onLocalSuccess = function( position ) {
-          var url = API_DOMAIN + '/user/' + user.userId + '/geo/update';
+          var url = API_DOMAIN + '/user/' + User.userId + '/geo/update';
 
           $http({
             method: 'PUT',
