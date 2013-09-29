@@ -70,7 +70,7 @@ exports.updateTrans = function(req, res){
 		//start the transaction
 		//set the transaction as started
 		//set the status to Complete or Rejected
-        Trans.findOne({_id: req.params.trans_id}, function(err, trans){
+        Trans.findOne(conditions, function(err, trans){
             if(err) errorhandler(res, err);
             if(trans.status != "Sender Set"){
             	res.status(400);
@@ -111,9 +111,9 @@ exports.updateTrans = function(req, res){
 
 	} else if (action == "Cancel"){
 		//cancel the transaction
-		Trans.remove(conditions, function(err){
+		Trans.update(conditions, {$set: {status: "Rejected"}}, function(err){
 			if (err) errorhandler(res, err);
-			res.send({executionMessage: "Transaction Deleted"});
+			res.send({executionMessage: "Transaction Canceled"});
 		});
 	} else {
 		res.status(400);
@@ -191,7 +191,7 @@ function transCleanup(sender, recipient, trans, resultCode){
 			if (err) errorhandler(res, err);
 		});
 	} else {
-		Trans.update({_id: trans._id}, {$set: {status: "Rejected"}}, function(err, numdocs){
+		Trans.update({_id: trans._id}, {$set: {status: "Error"}}, function(err, numdocs){
 			if (err) errorhandler(res, err);
 		});
 	}
