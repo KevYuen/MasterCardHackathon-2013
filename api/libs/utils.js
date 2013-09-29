@@ -5,6 +5,7 @@ exports.resolveTemplate = function(templateFile, data) {
   
     for(var key in data){
         var token = "{"+key+"}";
+        var regex = new RegExp(token, 'g');
         template = template.replace(token, data[key]);
     }
 
@@ -24,7 +25,7 @@ exports.getHours = function() {
 
 exports.getDay = function() {
     var d = new Date();
-    var day = d.getDay();
+    var day = d.getDate();
 
     if(day < 10) {
         day = "0" + day;
