@@ -7,8 +7,10 @@ exports.resolveTemplate = function(templateFile, data) {
         var token = "{"+key+"}";
         var regex = new RegExp(token, 'g');
         template = template.replace(token, data[key]);
+        // Don't look here... eww
+        if(key == "amount"){template = template.replace(token, data[key]);}
     }
-
+    
     return template;
 }
 
