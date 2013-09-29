@@ -206,12 +206,13 @@ angular.module('myApp.services', [])
 
     return service;
   })
-  .factory('Accel', function($rootScope, cordovaReady){
+  .factory('Accel', function($rootScope){
     var accelLog = [];
     var updateAccerometer = function(acceleration){
       //console.log(acceleration)
       $rootScope.$broadcast('accelerometer', acceleration);
     };
+
     if (navigator.accelerometer){
 
       var watchID = navigator.accelerometer.watchAcceleration(
@@ -220,6 +221,7 @@ angular.module('myApp.services', [])
         {frequency: 3000 }
       );
     } else {
+
       window.addEventListener('deviceorientation', updateAccerometer);
     }
     var service  = {
