@@ -8,7 +8,7 @@
 angular.module('myApp.services', [])
   .value('version', '0.1')
   .value('POLL_INTERVAL', 3000)
-  .factory('Trans', function( $q, $http, API_DOMAIN, User, Geo ){
+  .factory('Trans', function( $q, $http, API_DOMAIN, POLL_INTERVAL, User, Geo ){
 
     var service = {
       currentTransaction: {
