@@ -1,10 +1,16 @@
-<ul class="list-group">
-	<li class="list-group-item" ng-repeat="transaction in transactions">
-    <h4 class="list-group-item-heading">
-    	{{ transaction.description }} - ${{ transaction.amount }}
-  	</h4>
-    <p class="list-group-item-text">
-    	Status: {{ transaction.status }} // Date: {{ transaction.geoLocation.timestamp }}
-    </p>
-	</li>
-</ul>
+<div class="container">
+	<div class="row spacer">
+		<div class="col-xs-12">
+			<ul class="list-group">
+				<li class="list-group-item" ng-repeat="transaction in transactions">
+			    <h4 class="list-group-item-heading">
+			    	{{ transaction.description }} - ${{ transaction.amount }}
+			  	</h4>
+			    <p class="list-group-item-text">
+			    	Status: {{ transaction.status }} // Date: {{ transaction.geoLocation.timestamp }}
+			    </p>
+				</li>
+			</ul>
+		</div>
+	</div>	
+</div>

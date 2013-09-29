@@ -1,0 +1,25 @@
+<div class="container">
+	<div class="row spacer">
+		<div class="col-xs-12">
+			<ul ng-show="buyers" class="list-group">
+				
+				<li ng-show="buyers.length" class="list-group-item" ng-repeat="buyer in buyers">
+			    <h4 class="list-group-item-heading">
+			    	{{ buyer.key.email }} ~ {{ buyer.distance }}m away
+			  	</h4>
+				</li>
+
+				<p ng-hide="buyers.length">No buyers close by</p>
+
+			</ul>
+
+			<div ng-hide="buyers || error">
+				<p>Loading buyers...</p>
+			</div>
+
+			<div ng-show="error">
+				<pre>{{ JSON.stringify( error, undefined, 2 ) }}</pre>
+			</div>
+		</div>
+	</div>	
+</div>
