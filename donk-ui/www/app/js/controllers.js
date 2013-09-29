@@ -52,6 +52,8 @@ angular.module('myApp.controllers', []).
 
           // TODO: initiate actual transaction process here
           console.log( 'Should make API call to start transaction now' );
+
+          window.location.hash = '#/buyers';
         },
 
         // Error
@@ -67,6 +69,21 @@ angular.module('myApp.controllers', []).
       $scope.amount = '';
       $scope.description = '';
     };
+  })
+
+  .controller( 'BuyersCtrl', function( $scope, Trans ) {
+    Trans.getClosestBuyers()
+    .then(
+      // Success
+      function( data ) {
+        $scope.buyers = data;
+      },
+
+      // Error
+      function( data ) {
+        $scope.error = data;
+      }
+    );
   })
 
   .controller('NavBarCtrl', function($scope, $location, User){
