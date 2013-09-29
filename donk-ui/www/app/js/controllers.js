@@ -33,7 +33,7 @@ angular.module('myApp.controllers', []).
     }
 
     $scope.save = function( e ) {
-      console.log( 'Save clicked' );      
+      // console.log( 'Save clicked' );      
       // createTransaction();
 
       // TODO: validate amount to be rounded to 2 decimal places
@@ -51,7 +51,7 @@ angular.module('myApp.controllers', []).
       $scope.amount = ~~$scope.amount; // coerce into a number
 
       if ( $( e.currentTarget ).data( 'transId' ) ) {
-        console.log( 'Updating instead of creating transaction' );
+        // console.log( 'Updating instead of creating transaction' );
         Trans.updateTransaction({ action:'Modify', amount: $scope.amount, description: $scope.description })
           .then( onSuccess, onError );
       }
@@ -62,7 +62,7 @@ angular.module('myApp.controllers', []).
     };
 
     $scope.donk = function( e ) {
-      console.log( 'Donk clicked' );
+      // console.log( 'Donk clicked' );
 
       var onSuccess = function( resp ) {
         var date = new Date( resp.position.timestamp ),
@@ -73,7 +73,7 @@ angular.module('myApp.controllers', []).
         $scope.result = resp;
 
         // TODO: initiate actual transaction process here
-        console.log( 'Should make API call to start transaction now' );
+        // console.log( 'Should make API call to start transaction now' );
 
         window.location.hash = '#/buyers';
       };
@@ -84,7 +84,7 @@ angular.module('myApp.controllers', []).
       };
 
       if ( $( e.currentTarget ).data( 'transId' ) ) {
-        console.log( 'Updating instead of creating transaction' );
+        // console.log( 'Updating instead of creating transaction' );
         Trans.updateTransaction({ action: 'Modify', amount: $scope.amount, description: $scope.description })
           .then( onSuccess, onError );
       }
@@ -95,7 +95,7 @@ angular.module('myApp.controllers', []).
     };
 
     $scope.cancel = function( e ) {
-      console.log( 'Cancel clicked' );
+      // console.log( 'Cancel clicked' );
       $scope.amount = '';
       $scope.description = '';
     };
@@ -116,7 +116,7 @@ angular.module('myApp.controllers', []).
     );
 
     $scope.selectBuyer = function( e ) {
-    	console.log( 'selectBuyer!' );
+    	// console.log( 'selectBuyer!' );
     	var buyer = $( e.currentTarget ),
     		buyerId = buyer.data( 'userId' ),
     		update = {
@@ -161,7 +161,7 @@ angular.module('myApp.controllers', []).
         status = trans.data( 'transStatus' ),
         transId = trans.data( 'transId' );
       trans.addClass( 'active' )
-      console.log( 'Trans clicked - ' + transId + ': ' + status );
+      // console.log( 'Trans clicked - ' + transId + ': ' + status );
 
       if ( status == 'Unsent' ) {
         window.location.hash = '#/trans/' + transId;
@@ -193,7 +193,7 @@ angular.module('myApp.controllers', []).
 
     $scope.logIn = function(){
       User.logIn($scope.email, $scope.password, function(response){
-        console.log(response);
+        // console.log(response);
         Trans.repeatedlyPoll();
         Geo.repeatedlyUpdateLocation();        
       });
@@ -236,13 +236,13 @@ angular.module('myApp.controllers', []).
 			Trans.updateTransaction({ action: action }).then(
 				// Success
 				function( data ) {
-					console.log( action + ' successful for transaction' );
+					// console.log( action + ' successful for transaction' );
           restoreTransaction();
 					window.location.hash = '#/trans';
 				},
 				// Error
 				function( data ) {
-					console.log( action + ' error' );
+					// console.log( action + ' error' );
           restoreTransaction();
 					$scope.error = data;
 				}
@@ -342,7 +342,7 @@ angular.module('myApp.controllers', []).
             Geo.repeatedlyUpdateLocation(); 
           },
           function(response){
-            console.log(response);
+            // console.log(response);
           }
         );
       });

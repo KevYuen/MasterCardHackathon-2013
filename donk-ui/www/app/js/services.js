@@ -45,13 +45,13 @@ angular.module('myApp.services', [])
         })
         .success( function( data ) {
           console.log( 'getTransactions success: ' );
-          console.log( JSON.stringify( data, undefined, 2 ) );
+          // console.log( JSON.stringify( data, undefined, 2 ) );
           that.transactions = data;
           deferred.resolve( data );
         })
         .error( function( data ) {
           console.log( 'getTransactions error: ' );
-          console.log( JSON.stringify( data, undefined, 2 ) );
+          // console.log( JSON.stringify( data, undefined, 2 ) );
           deferred.reject( data );
         });
 
@@ -81,13 +81,13 @@ angular.module('myApp.services', [])
             data: transaction
           })
           .success( function( data ) {
-            console.log( 'Transaction created: ' + JSON.stringify( data, undefined, 2 ) );
+            // console.log( 'Transaction created: ' + JSON.stringify( data, undefined, 2 ) );
             that.currentTransaction = data;
             result.transaction = data;
             deferred.resolve( result );
           })
           .error( function( data ) {
-            console.log( 'Error creating transaction: ' + JSON.stringify( data, undefined, 2 ) );
+            // console.log( 'Error creating transaction: ' + JSON.stringify( data, undefined, 2 ) );
             result.error = data;
             deferred.reject( result );
           });
@@ -124,12 +124,12 @@ angular.module('myApp.services', [])
               data: update
             })
             .success( function( data ) {
-              console.log( 'updateTransaction success: ' + JSON.stringify( data, undefined, 2 ) );
+              // console.log( 'updateTransaction success: ' + JSON.stringify( data, undefined, 2 ) );
               that.currentTransaction = data;
               deferred.resolve( data );
             })
             .error( function( data ) {
-              console.log( 'updateTransaction error: ' + JSON.stringify( data, undefined, 2 ) );
+              // console.log( 'updateTransaction error: ' + JSON.stringify( data, undefined, 2 ) );
               deferred.reject( data );
             });
           },
@@ -153,12 +153,12 @@ angular.module('myApp.services', [])
         })
         .success( function( data ) {
           console.log( 'getClosestBuyers success: ' );
-          console.log( JSON.stringify( data, undefined, 2 ) );
+          // console.log( JSON.stringify( data, undefined, 2 ) );
           deferred.resolve( data );
         })
         .error( function( data ) {
           console.log( 'getClosestBuyers error: ' );
-          console.log( JSON.stringify( data, undefined, 2 ) );
+          // console.log( JSON.stringify( data, undefined, 2 ) );
           deferred.reject( data );
         });
 
@@ -179,7 +179,7 @@ angular.module('myApp.services', [])
 
         var onPollError = function( data ) {
           console.log( 'Failed to poll!' );
-          console.log( JSON.stringify( data, undefined, 2 ) );
+          // console.log( JSON.stringify( data, undefined, 2 ) );
         };
 
         setTimeout(function() { 
@@ -236,7 +236,7 @@ angular.module('myApp.services', [])
 
         var onLocalError = function( data ) {
           console.log( 'Failed to poll!' );
-          console.log( JSON.stringify( data, undefined, 2 ) );
+          // console.log( JSON.stringify( data, undefined, 2 ) );
           onError && onError( data );
         }
 
@@ -343,7 +343,7 @@ angular.module('myApp.services', [])
 
         var onSuccess = function( position ) {
           console.log( 'getDeviceLocation success: ' );
-          console.log( JSON.stringify( position, undefined, 2 ) );
+          // console.log( JSON.stringify( position, undefined, 2 ) );
           var location = {
             timestamp: position.timestamp,
             latitude: position.coords.latitude,
@@ -379,13 +379,13 @@ angular.module('myApp.services', [])
           })
           .success( function( data ) {
             console.log( 'saveLocation success: ' );
-            console.log( JSON.stringify( data, undefined, 2 ) );
+            // console.log( JSON.stringify( data, undefined, 2 ) );
             // Pre-process server response here and return data expected - nothing for now
             deferred.resolve( position );
           })
           .error( function( data ) {
             console.log( 'Error saving location - server sent back: ' );
-            console.log( JSON.stringify( data, undefined, 2 ) );
+            // console.log( JSON.stringify( data, undefined, 2 ) );
             deferred.reject( data );
           });
         };
