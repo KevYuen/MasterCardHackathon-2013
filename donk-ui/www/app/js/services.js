@@ -77,7 +77,7 @@ angular.module('myApp.services', [])
 
     return service;
   })
-  .factory('Geo', function($http) {
+  .factory('Geo', function($http, API_DOMAIN) {
     // Enables capture of geolocation data
     var service = {
       getDeviceLocation: function(onSuccess, onError) {
@@ -100,9 +100,10 @@ angular.module('myApp.services', [])
       saveLocation: function( user, onSuccess, onError ) {
         // TODO: Convert this method to return a promise object
 
+        // TODO: Add User service to Geo service - check for user status before attempting save
+
         var onLocalSuccess = function( position ) {
-          var rootUrl = 'http://ec2-54-227-22-178.compute-1.amazonaws.com',
-            url = rootUrl + '/user/' + user.userId + '/geo/update';
+          var url = API_DOMAIN + '/user/' + user.userId + '/geo/update';
 
           $http({
             method: 'PUT',
