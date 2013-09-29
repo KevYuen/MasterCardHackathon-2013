@@ -17,13 +17,35 @@ angular.module('myApp.services', [])
         geoLocation: null
       },
 
+      getTransactions: function() {
+        var deferred = $q.defer(),
+          url = API_DOMAIN + '/user/' + User.userId + '/trans',
+          that = this;
+        $http({
+          method: 'GET',
+          url: url
+        })
+        .success( function( data ) {
+          console.log( 'getTransactions success: ' );
+          console.log( JSON.stringify( data, undefined, 2 ) );
+          that.transactions = data;
+          deferred.resolve( data );
+        })
+        .error( function( data ) {
+          console.log( 'getTransactions error: ' );
+          console.log( JSON.stringify( data, undefined, 2 ) );
+          deferred.reject( data );
+        });
+
+        return deferred.promise;
+      },
+
       createTransaction: function( amount, description ) {
         var result = { position: null, transaction: null, error: false },
           deferred = $q.defer(),
           that = this;
 
         var onSuccess = function( position ) {
-          console.log( 'Geolocation success: (' + position.latitude + ', ' + position.longitude + ')' );
           result.position = position;
           deferred.notify( result );
 
@@ -63,30 +85,30 @@ angular.module('myApp.services', [])
         return deferred.promise;
       },
 
-      purchases: [
+      transactions: [
         {
           amount: 350,
-          item: 'canoe',
-          buyer: 'Person name',
-          date: 'a date'
+          description: 'canoe',
+          status: 'Unsent',
+          date: { geoLocation: { timestamp: '2013-09-29T04:19:12.531Z' } }
         },
         {
           amount: 123,
-          item: 'T-Shirt',
-          buyer: 'Person name',
-          date: 'a date'
+          description: 'T-Shirt',
+          status: 'Unsent',
+          date: { geoLocation: { timestamp: '2013-09-29T04:19:12.531Z' } }
         },
         {
           amount: 35,
-          item: 'Ice Cream',
-          buyer: 'Person name',
-          date: 'a date'
+          description: 'Ice Cream',
+          status: 'Unsent',
+          date: { geoLocation: { timestamp: '2013-09-29T04:19:12.531Z' } }
         },
         {
           amount: 70,
-          item: 'Laptop',
-          buyer: 'Person name',
-          date: 'a date'
+          description: 'Laptop',
+          status: 'Unsent',
+          date: { geoLocation: { timestamp: '2013-09-29T04:19:12.531Z' } }
         }
       ]
     };
@@ -135,6 +157,8 @@ angular.module('myApp.services', [])
     var service = {
       getDeviceLocation: function(onSuccess, onError) {
         var onLocalSuccess = function( position ) {
+          console.log( 'getDeviceLocation success: ' );
+          console.log( JSON.stringify( position, undefined, 2 ) );
           var location = {
             timestamp: position.timestamp,
             latitude: position.coords.latitude,
@@ -164,7 +188,8 @@ angular.module('myApp.services', [])
             data: position
           })
           .success( function( data ) {
-            console.log( 'Success saving location' );
+            console.log( 'saveLocation success: ' );
+            console.log( JSON.stringify( data, undefined, 2 ) );
             // Pre-process server response here and return data expected - nothing for now
             onSuccess && onSuccess( position );
           })
@@ -235,6 +260,7 @@ angular.module('myApp.services', [])
         {frequency: 3000 }
       );
     } else {
+
       window.addEventListener('deviceorientation', updateAccerometer);
     }
     var service  = {
