@@ -181,12 +181,37 @@ angular.module('myApp.services', [])
 
     return service;
   })
-  .factory('Accel', function($rootScope, cordovaReady){
+
+
+  .factory('Accel', function($rootScope){
     var accelLog = [];
     var updateAccerometer = function(acceleration){
       //console.log(acceleration)
-      $rootScope.$broadcast('accelerometer', acceleration);
+      accelLog.push([acceleration.alpha, acceleration.beta, acceleration.gamma]);
+      
     };
+    var averageAndBroadcast = function(){
+      if (accelLog.length == 0){
+        return;
+      }
+
+      var cloneLog = angular.copy(accelLog);
+      //console.log(cloneLog)
+      accelLog = [];
+      var alpha = 0, beta = 0, gamma = 0;
+      for (var i=0; i < cloneLog.length; i++){
+        alpha += cloneLog[i][0];
+        beta += cloneLog[i][1];
+        gamma += cloneLog[i][2];
+      }
+      alpha = alpha / cloneLog.length;
+      beta = beta / cloneLog.length;
+      gamma = gamma / cloneLog.length;
+      $rootScope.$broadcast('accelerometer', {alpha: ~~alpha, beta: ~~beta, gamma: ~~gamma});
+    }
+
+    window.setInterval(averageAndBroadcast, 3);
+
     if (navigator.accelerometer){
 
       var watchID = navigator.accelerometer.watchAcceleration(
@@ -206,3 +231,6 @@ angular.module('myApp.services', [])
     return service;
     
   })
+
+
+
