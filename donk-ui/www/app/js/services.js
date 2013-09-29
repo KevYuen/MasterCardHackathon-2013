@@ -184,30 +184,45 @@ angular.module('myApp.services', [])
 
 
   .factory('Accel', function($rootScope){
-    var accelLog = [];
+    var accelLog = {
+      alpha: [],
+      beta: [],
+      gamma:[]
+    };
     var updateAccerometer = function(acceleration){
       //console.log(acceleration)
-      accelLog.push([acceleration.alpha, acceleration.beta, acceleration.gamma]);
+      accelLog.alpha.push(acceleration.alpha);
+      accelLog.beta.push(acceleration.beta);
+      accelLog.gamma.push(acceleration.gamma);
+      //accelLog.push([acceleration.alpha, acceleration.beta, acceleration.gamma]);
       
     };
     var averageAndBroadcast = function(){
-      if (accelLog.length == 0){
+      if (accelLog.alpha.length < 20){
         return;
       }
 
       var cloneLog = angular.copy(accelLog);
       //console.log(cloneLog)
-      accelLog = [];
-      var alpha = 0, beta = 0, gamma = 0;
-      for (var i=0; i < cloneLog.length; i++){
+      accelLog = {
+        alpha: [],
+        beta: [],
+        gamma: []
+      };
+      var retArray = {};
+      _.each(['alpha', 'beta', 'gamma'], function(key){
+        retArray[key] = _.max(cloneLog[key]) - _.min(cloneLog[key]);
+      })
+      /*for (var i=0; i < cloneLog.length; i++){
         alpha += cloneLog[i][0];
         beta += cloneLog[i][1];
         gamma += cloneLog[i][2];
       }
       alpha = alpha / cloneLog.length;
       beta = beta / cloneLog.length;
-      gamma = gamma / cloneLog.length;
-      $rootScope.$broadcast('accelerometer', {alpha: ~~alpha, beta: ~~beta, gamma: ~~gamma});
+      gamma = gamma / cloneLog.length;*/
+
+      $rootScope.$broadcast('accelerometer', retArray);
     }
 
     window.setInterval(averageAndBroadcast, 3);

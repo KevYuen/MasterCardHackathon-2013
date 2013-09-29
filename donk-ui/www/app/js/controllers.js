@@ -91,6 +91,7 @@ angular.module('myApp.controllers', []).
     $scope.$on('accelerometer', function(ev, accel){
       $scope.$apply(function(){
         $scope.accel = accel;
+
       });
       //console.log(accel);
     });
