@@ -3,7 +3,7 @@
 		<div class="col-xs-12">
 			<ul ng-show="buyers" class="list-group">
 				
-				<li ng-show="buyers.length" class="list-group-item" ng-repeat="buyer in buyers">
+				<li ng-show="buyers.length" class="list-group-item" ng-repeat="buyer in buyers" ng-click="selectBuyer($event)" data-user-id="{{ buyer.key._id }}">
 			    <h4 class="list-group-item-heading">
 			    	{{ buyer.key.email }} ~ {{ buyer.distance }}m away
 			  	</h4>

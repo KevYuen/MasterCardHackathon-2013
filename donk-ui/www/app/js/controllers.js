@@ -84,6 +84,19 @@ angular.module('myApp.controllers', []).
         $scope.error = data;
       }
     );
+
+    $scope.selectBuyer = function( e ) {
+    	console.log( 'selectBuyer!' );
+    	var buyer = $( e.currentTarget ),
+    		buyerId = buyer.data( 'userId' ),
+    		update = {
+    			action: "Modify",
+    			senderId: buyerId
+    		};
+
+    	buyer.addClass( 'active' );
+    	Trans.updateTransaction( update );
+    };
   })
 
   .controller('NavBarCtrl', function($scope, $location, User){
