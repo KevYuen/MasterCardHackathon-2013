@@ -167,20 +167,24 @@ angular.module('myApp.services', [])
 
       repeatedlyPoll: function() {
         var that = this;
-        var intervalHandler = setInterval(function() {
-          that.pollForIncomingTransaction().then(
-            // Success
-            function( data ) {
-              clearInterval( intervalHandler );
-              window.location.hash = '#/incoming/recipient/' + data.user._id + '/trans/' + data.transaction._id;
-            },
-            // Error
-            function( data ) {
-              console.log( 'Failed to poll!' );
-              console.log( JSON.stringify( data, undefined, 2 ) );
-            }
-          );
-        }, 1000);
+
+        var onPoll = function( data ) {
+          if ( data ) {
+            window.location.hash = '#/incoming/recipient/' + data.user._id + '/trans/' + data.transaction._id;
+          }
+          else {
+            that.repeatedlyPoll();
+          }
+        };
+
+        var onPollError = function( data ) {
+          console.log( 'Failed to poll!' );
+          console.log( JSON.stringify( data, undefined, 2 ) );
+        };
+
+        setTimeout(function() { 
+          that.pollForIncomingTransaction().then( onPoll, onPollError );
+        }, 1000 );
       },
 
       pollForIncomingTransaction: function() {
@@ -192,22 +196,22 @@ angular.module('myApp.services', [])
           url: url
         })
         .success( function( data ) {
-          if ( data ) {
+          if ( data && data.status == 'Sender Set' ) {
             console.log( 'There is an incoming request' );
+
             User.getUser( data.recipientId ).then(
               // Success
               function( userData ) {
-                deferred.resolve({
-                  user: userData,
-                  transaction: data
-                });
+                deferred.resolve({ user: userData, transaction: data });
               },
-
               // Error
               function( resp ) {
                 deferred.reject( resp );
               }
             );
+          }
+          else {
+            deferred.resolve( data );  
           }
         })
         .error( function( data ) {
@@ -219,24 +223,27 @@ angular.module('myApp.services', [])
 
       pollForDonkResponse: function( onSuccess, onError ) {
         var that = this;
-        var intervalHandler = setInterval(function() {
-          that.getTransaction( that.currentTransaction._id ).then(
-            // Success
-            function( data ) {
-              if ( data.status !== "Sender Set" ) {
-                clearInterval( intervalHandler );
-                that.currentTransaction = data;
-                onSuccess && onSuccess( data );   
-              }
-            },
-            // Error
-            function( data ) {
-              console.log( 'Failed to poll!' );
-              console.log( JSON.stringify( data, undefined, 2 ) );
-              onError && onError( data );
-            }
-          );
-        }, 1000);
+
+        var onLocalSuccess = function( data ) {
+          if ( data.status !== "Sender Set" ) {
+            that.currentTransaction = data;
+            onSuccess && onSuccess( data );   
+          }
+          else {
+            that.pollForDonkResponse(onSuccess, onError);
+          }
+        }
+
+        var onLocalError = function( data ) {
+          console.log( 'Failed to poll!' );
+          console.log( JSON.stringify( data, undefined, 2 ) );
+          onError && onError( data );
+        }
+
+        setTimeout(function() {
+          var transId = that.currentTransaction._id;
+          that.getTransaction( transId ).then( onLocalSuccess, onLocalError );
+        }, 1000 );
       },
 
       transactions: [
