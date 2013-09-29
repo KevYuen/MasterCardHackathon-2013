@@ -285,7 +285,7 @@ angular.module('myApp.services', [])
       email: '',
       userId: '',
       cards: [],
-      recieve: 0,
+      receive: 0,
       spend: 0
     };
 
