@@ -14,18 +14,6 @@ angular.module('myApp.controllers', []).
     $scope.result = false;
     $scope.loggedIn = User.loggedIn;
 
-    // Force a login when this is created
-    if ( !User.loggedIn ) {
-      User.logIn( 'abc@abc.com', 'beer',
-        function() { // Login success
-          console.log( 'Logged in successfully' );
-        },
-        function( response ) { // Login failed
-          console.log( 'Login Error: ' + JSON.stringify( response, undefined, 2 ) );
-        }
-      );      
-    }
-
     $scope.save = function( e ) {
       console.log( 'Save clicked' );      
       createTransaction();
