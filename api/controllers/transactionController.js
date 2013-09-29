@@ -1,5 +1,16 @@
 //transaction controller
-var Trans = require('../models/transaction.js');
+var Trans = require('../models/transaction.js'),
+    User = require('../models/user.js'),
+    mc = require('../libs/mc'),
+    utils = require('../libs/utils');
+
+
+function responseHandler(res) {
+    console.log("status: ", res.statusCode);
+    //res.on('data', function(d) {
+    //    process.stdout.write(d);
+    //});
+}
 
 /*
  * Create a new transaction
@@ -9,13 +20,13 @@ var Trans = require('../models/transaction.js');
  */
 exports.create = function(req,res){
 	var trans = new Trans;
-	trans.senderID = req.params.id;
+	trans.recipientId = req.params.id;
 	trans.amount = req.body.amount;
 	trans.currency = req.body.currency;
 	trans.description = req.body.description;
 	trans.geoLocation = req.body.geoLocation;
 	trans.save(function(err, newTrans){
-		if (err) res.send({error: err});
+		if (err) errorhandler(res, err);
 		res.send(newTrans);
 	});
 }
@@ -33,19 +44,22 @@ exports.updateTrans = function(req, res){
 		action = req.body.action;
 
 	if(action == "Modify"){
-		if(req.body.recipient_id){ 
-			update.$set.recipient_id = req.body.recipient_id; 
-			update.$set.status = "Recipient Set";
+		if(req.body.senderId){ 
+			update.$set.senderId = req.body.senderId; 
+			update.$set.status = "Sender Set";
 		}
 		if(req.body.amount) update.$set.amount = req.body.amount;
 		if(req.body.currency) update.$set.currency = req.body.currency;
 		if(req.body.description) update.$set.description = req.body.description;
 
 		function callback(err, numdocs){
-			if (numdocs < 1 ) res.send({error: "Transaction not found"});
-			if (err) res.send({error:err});
+			if (numdocs < 1 ){
+				res.status(404);
+				res.send({error: "Transaction not found"});
+			}
+			if (err) errorhandler(res, err);
 			Trans.findOne(conditions, function(err, trans){
-				if(err) res.send({error:err});
+				if(err) errorhandler(res, err);
 				res.send(trans);
 			});
 		}
@@ -55,13 +69,48 @@ exports.updateTrans = function(req, res){
 		//start the transaction
 		//set the transaction as started
 		//set the status to Complete or Rejected
+        Trans.findOne({_id: req.params.trans_id}, function(err, trans){
+            if(err) errorhandler(res, err);
+            User.findOne({_id: trans.senderId}, function(err, sender){
+                if(err) errorhandler(res, err);
+                User.findOne({_id: trans.recipientId}, function(err, recipient){
+                    if(err) errorhandler(res, err);
+                    var data = {
+                                    hours: utils.getHours(),
+                                    minutes: utils.getMinutes(),
+                                    day: utils.getDay(),
+                                    month: utils.getMonth(),
+                                    seconds: utils.getSeconds(),
+                                    sender_card: sender.cards[0].cardNumber,
+                                    sender_month: sender.cards[0].expiryMonth,
+                                    sender_year: sender.cards[0].expiryYear,
+                                    sender_name: sender.name,
+                                    amount: trans.amount,
+                                    receiver_name: recipient.name,
+                                    receiver_card: recipient.cards[0].cardNumber,
+                                    transaction_number: utils.getTransactionId()
+                               }
+    
+                    mc.post('sandbox.api.mastercard.com',
+                    '/moneysend/v1/transfer',
+                    { "Format": "XML" },
+                    utils.resolveTemplate('../templates/CreateTransferRequest.xml', data),
+                    function(result){
+                        res.status = result.statusCode;
+                        res.send(trans);
+                    });
+                });        
+             });
+        }); 
+
 	} else if (action == "Cancel"){
 		//cancel the transaction
 		Trans.remove(conditions, function(err){
-			if (err) res.send({error: err});
+			if (err) errorhandler(res, err);
 			res.send({executionMessage: "Transaction Deleted"});
 		});
 	} else {
+		res.status(400);
 		res.send({error:"Invalid action"});
 	}
 }
@@ -73,8 +122,8 @@ exports.updateTrans = function(req, res){
  * Server send: [transaction]
  */
 exports.getTrans = function(req, res){
-	Trans.find({senderID: req.params.id}, function(err, trans){
-		if (err) res.send({error: err});
+	Trans.find({recipientId: req.params.id}, function(err, trans){
+		if (err) errorhandler(res, err);
 		res.send(trans);
 	});
 }
@@ -87,7 +136,12 @@ exports.getTrans = function(req, res){
  */
 exports.getSingleTrans = function(req, res){
 	Trans.findOne({_id: req.params.id}, function(err, trans){
-		if (err) res.send({error: err});
+		if (err) errorhandler(res, err);
 		res.send(trans);
 	});
+}
+
+function errorhandler(res, err){
+	res.status(500);
+	res.send({error:err});
 }

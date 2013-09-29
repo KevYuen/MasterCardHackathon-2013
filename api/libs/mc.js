@@ -119,10 +119,6 @@ exports.get = function(hostname, path, params, callback) {
     var baseString = _getBaseString("GET", requestURL, auth);    
     var signature = _getSignature(baseString);
     var authHeader = _getAuthHeader(signature, auth);
-    //console.log("CONSUMER:["+_getConsumerKey()+"]");
-    //console.log("BASESTRING: " + baseString);
-    //console.log("SIGNATURE: " + signature);
-    //console.log("AUTHHEADER: " + authHeader);
    
     var updatedPath = path + "?";
     for(var key in params) {
@@ -148,7 +144,8 @@ exports.get = function(hostname, path, params, callback) {
  */
 exports.post = function(hostname, path, params, body, callback) {
     var requestURL = _constructURL(hostname, path, params);
-   
+    console.log("Request: " + requestURL);
+
     var auth = {
         oauth_consumer_key      :   _getConsumerKey(),
         oauth_nonce             :   _getNonce(),
@@ -160,16 +157,11 @@ exports.post = function(hostname, path, params, body, callback) {
     if(body == null) { body = ""; }
 
     var hashedBody = _getBodyHash(body);
-    console.log("HASH: " + hashedBody);
     auth.oauth_body_hash = hashedBody;
 
     var baseString = _getBaseString("POST", requestURL, auth);
     var signature = _getSignature(baseString);
     var authHeader = _getAuthHeader(signature, auth);
-    //console.log("CONSUMER:["+_getConsumerKey()+"]");
-    //console.log("BASESTRING: " + baseString);
-    //console.log("SIGNATURE: " + signature);
-    //console.log("AUTHHEADER: " + authHeader);
   
     var updatedPath = path + "?";
     for(var key in params) {
@@ -182,7 +174,8 @@ exports.post = function(hostname, path, params, body, callback) {
         method: 'POST',
         path: updatedPath,
         headers: {
-            Authorization: authHeader
+            Authorization: authHeader,
+            "content-type" : "application/xml"
         }
     };
 

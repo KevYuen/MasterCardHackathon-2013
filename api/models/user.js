@@ -15,9 +15,12 @@ var user = new Schema({
 			speed: Number,
 			heading: Number
 		},
-	photo: String,
+	photo: {type:String, default:null},
 	password: String,
-	address: String
+	address: String,
+	spend: {type:Number, default: 0},
+	receive: {type:Number, default: 0}
+
 });
 
 module.exports = mongoose.model('User', user);

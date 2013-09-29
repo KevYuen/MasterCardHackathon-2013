@@ -1,6 +1,8 @@
 var express = require('express'),
     mongoose = require('mongoose'),
     mc = require('./libs/mc'),
+    utils = require('./libs/utils'),
+    fs = require('fs'),
     app = module.exports = express();
  
 mongoose.connect(process.env.Mongo|| "mongodb://localhost/mastercard");
@@ -30,6 +32,7 @@ app.get("/", function(req, res){res.send("Welcome to the Donk's API");});
 app.get("/user/:id", user.getUser);
 app.post("/user/login", user.login);
 app.post("/user/create", user.create);
+app.put("/user/:id/photo", user.updatePhoto);
 
 //card
 app.get("/user/:id/card", user.getCards);
@@ -49,16 +52,37 @@ app.get("/trans/:id", trans.getSingleTrans);
 app.listen(3000);
 console.log('Express server listening on port 3000');
 
+/*
 function responseHandler(res) {
     console.log("status: ", res.statusCode);
-    console.log("header: ", res.headers);
     res.on('data', function(d) {
         process.stdout.write(d);
     });
 }
 
-/*mc.post('sandbox.api.mastercard.com',
-       '/atms/v1/atm',
-       { "Format": "XML", "PageOffset" : "0", "PageLength" : "10", "AddressLine1" : "70%20Main%20St", "PostalCode" : "63366", "Country" : "USA" },
-       "<xml>data</xml>",
-        responseHandler);*/
+
+var data = {
+                month: utils.getMonth(),
+                day: utils.getDay(),
+                hours: utils.getHours(),
+                minutes: utils.getMinutes(),
+                seconds: utils.getSeconds()
+           }
+var template = utils.resolveTemplate('./templates/CreateTransferRequest.xml', data);
+console.log(template);
+
+mc.post('sandbox.api.mastercard.com',
+       '/moneysend/v1/transfer',
+       { "Format": "XML" },
+       fs.readFileSync('./templates/CreateTransferRequest.xml').toString('ascii'),
+       responseHandler);
+*/
+
+/*
+mc.post('sandbox.api.mastercard.com',
+       '/moneysend/mapping/v1/card',
+       { "Format": "XML" },
+       fs.readFileSync('./templates/CreateMappingRequest.xml').toString('ascii'),
+       responseHandler);
+*/
+
