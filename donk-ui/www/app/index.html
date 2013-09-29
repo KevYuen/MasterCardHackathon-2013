@@ -24,6 +24,11 @@
   [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
     display: none !important;
   }
+  .btn-group {
+    height: 45px;
+  }
+
+
   </style>
 </head>
 <body ng-cloak ng-controller='AppCtrl'>
@@ -62,9 +67,9 @@
       <div class='row' ng-controller="NavBarCtrl">
           <div class='col-xs-12'>
           <div class='btn-group btn-group-justified'>
-            <a class="btn btn-default" ng-class="{active: location.path() == '/balance'} " href='#/balance'><span class='glyphicon glyphicon-user'></span></a>
-            <a class="btn btn-default" ng-class="{active: location.path() == '/trans/new'} " href='#/trans/new'><span class='glyphicon glyphicon-arrow-right'></span><span class=' glyphicon glyphicon-usd'></span></a>
-            <a class="btn btn-default" ng-class="{active: location.path() == '/trans'} " href='#/trans'><span class='glyphicon glyphicon-align-justify'></span></a>
+            <a class="btn btn-primary" ng-class="{active: location.path() == '/balance'} " href='#/balance'><span class='glyphicon glyphicon-user'></span></a>
+            <a class="btn btn-primary" ng-class="{active: location.path() == '/trans/new'} " href='#/trans/new'><span class='glyphicon glyphicon-arrow-right'></span><span class=' glyphicon glyphicon-usd'></span></a>
+            <a class="btn btn-primary" ng-class="{active: location.path() == '/trans'} " href='#/trans'><span class='glyphicon glyphicon-align-justify'></span></a>
           </div>
         </div>
       </div>
