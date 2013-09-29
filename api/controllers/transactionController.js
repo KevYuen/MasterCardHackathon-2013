@@ -9,7 +9,7 @@ var Trans = require('../models/transaction.js');
  */
 exports.create = function(req,res){
 	var trans = new Trans;
-	trans.senderID = req.params.id;
+	trans.recipientId = req.params.id;
 	trans.amount = req.body.amount;
 	trans.currency = req.body.currency;
 	trans.description = req.body.description;
@@ -33,9 +33,9 @@ exports.updateTrans = function(req, res){
 		action = req.body.action;
 
 	if(action == "Modify"){
-		if(req.body.recipient_id){ 
-			update.$set.recipient_id = req.body.recipient_id; 
-			update.$set.status = "Recipient Set";
+		if(req.body.senderId){ 
+			update.$set.senderId = req.body.senderId; 
+			update.$set.status = "Sender Set";
 		}
 		if(req.body.amount) update.$set.amount = req.body.amount;
 		if(req.body.currency) update.$set.currency = req.body.currency;
@@ -77,7 +77,7 @@ exports.updateTrans = function(req, res){
  * Server send: [transaction]
  */
 exports.getTrans = function(req, res){
-	Trans.find({senderID: req.params.id}, function(err, trans){
+	Trans.find({recipientId: req.params.id}, function(err, trans){
 		if (err) errorhandler(res, err);
 		res.send(trans);
 	});
