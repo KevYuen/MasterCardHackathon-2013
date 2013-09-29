@@ -81,38 +81,38 @@ exports.updateTrans = function(req, res){
                 User.findOne({_id: trans.recipientId}, function(err, recipient){
                     if(err) errorhandler(res, err);
                     try{
-                    var data = {
-                                    hours: utils.getHours(),
-                                    minutes: utils.getMinutes(),
-                                    day: utils.getDay(),
-                                    month: utils.getMonth(),
-                                    seconds: utils.getSeconds(),
-                                    sender_card: sender.cards[0].cardNumber,
-                                    sender_month: sender.cards[0].expiryMonth,
-                                    sender_year: sender.cards[0].expiryYear,
-                                    sender_name: sender.name,
-                                    amount: trans.amount,
-                                    receiver_name: recipient.name,
-                                    receiver_card: recipient.cards[0].cardNumber,
-                                    transaction_number: utils.getTransactionId()
-                               }
-    
-                    mc.post('sandbox.api.mastercard.com',
-                    '/moneysend/v1/transfer',
-                    { "Format": "XML" },
-                    utils.resolveTemplate('./templates/CreateTransferRequest.xml', data),
-                    function(result){
-                    	transCleanup(sender, recipient, trans, result.statusCode);
-                    	res.status = result.statusCode;
-                    	res.send(trans);
-                    });
-                }catch(e){
-                	Trans.update(conditions, {$set:{status:"Error"}}, function(err, numdocs){
-                		if (err) errorhandler(res, err);
-                	});
-                	res.status(500);
-                	res.send({error:e});
-                }
+                    	var data = {
+                    		hours: utils.getHours(),
+                    		minutes: utils.getMinutes(),
+                    		day: utils.getDay(),
+                    		month: utils.getMonth(),
+                    		seconds: utils.getSeconds(),
+                    		sender_card: sender.cards[0].cardNumber,
+                    		sender_month: sender.cards[0].expiryMonth,
+                    		sender_year: sender.cards[0].expiryYear,
+                    		sender_name: sender.name,
+                    		amount: trans.amount,
+                    		receiver_name: recipient.name,
+                    		receiver_card: recipient.cards[0].cardNumber,
+                    		transaction_number: utils.getTransactionId()
+                    	}
+                    	
+                    	mc.post('sandbox.api.mastercard.com',
+                    		'/moneysend/v1/transfer',
+                    		{ "Format": "XML" },
+                    		utils.resolveTemplate('./templates/CreateTransferRequest.xml', data),
+                    		function(result){
+                    			transCleanup(sender, recipient, trans, result.statusCode);
+                    			res.status = result.statusCode;
+                    			res.send(trans);
+                    		});
+                    }catch(e){
+                    	Trans.update(conditions, {$set:{status:"Error"}}, function(err, numdocs){
+                    		if (err) errorhandler(res, err);
+                    	});
+                    	res.status(500);
+                    	res.send({error:e});
+                    }
                 });        
              });
         }); 
