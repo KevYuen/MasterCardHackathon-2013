@@ -51,6 +51,7 @@ exports.updateTrans = function(req, res){
 		if(req.body.amount) update.$set.amount = req.body.amount;
 		if(req.body.currency) update.$set.currency = req.body.currency;
 		if(req.body.description) update.$set.description = req.body.description;
+		if(req.body.geoLocation) update.$set.geoLocation = req.body.geoLocation;
 
 		function callback(err, numdocs){
 			if (numdocs < 1 ){
