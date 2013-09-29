@@ -31,7 +31,7 @@
     <form role='form' ng-hide='showSignUp'>
       <div class='form-group'>
       <label>Email:</label><input type='text' class="form-control" ng-model='email'><br>
-      <label>Password:</label> <input type='text' class="form-control" ng-model='password'><br>
+      <label>Password:</label> <input type='password' class="form-control" ng-model='password'><br>
       <button class='btn btn-primary btn-block' ng-click='logIn()'>Log In</button>
       </div>
     </form>
@@ -73,11 +73,6 @@
 
   <div ng-view></div>
   <span style='color: red; font-size: 30px;' ng-show='accel.gamma > 200' >DONK!</span><br>
-  Gamma: {{accel.gamma}}<br>
-  Alpha: {{accel.alpha}}<br>
-  Beta: {{accel.beta}}<br>
-  Current Minimum Dot Product: {{accel.currentMin}} <br>
-  Current Maximum Dot Product: {{accel.currentMax}} 
   
 
   <script no-src="lib/json2/json2.js"></script>

@@ -138,7 +138,7 @@ angular.module('myApp.controllers', []).
     });
 
   })
-  .controller('LogInCtrl', function($scope, User, Trans, API_DOMAIN){
+  .controller('LogInCtrl', function($scope, User, Trans, API_DOMAIN, Geo){
     $scope.email = '';
     $scope.password = '';
     $scope.logInError = false;
@@ -259,7 +259,7 @@ angular.module('myApp.controllers', []).
     );
   })
 
-  .controller('SignUpCtrl', function($scope, API_DOMAIN, $http){
+  .controller('SignUpCtrl', function($scope, API_DOMAIN, $http, Geo){
     $scope.signUp = function(){
       //Create the user
       $http({

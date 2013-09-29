@@ -285,6 +285,8 @@ angular.module('myApp.services', [])
       email: '',
       userId: '',
       cards: [],
+      recieve: 0,
+      spend: 0
     };
 
     var logIn = function(email, password, successCallback, errorCallBack){
@@ -301,6 +303,8 @@ angular.module('myApp.services', [])
         service.isLoggedIn = true;
         service.userId = response.data._id;
         service.cards = response.data.cards;
+        service.recieve = response.data.recieve;
+        service.spend = response.data.spend;
 
         successCallback( response );
       }, function(response){
@@ -328,8 +332,6 @@ angular.module('myApp.services', [])
 
     service.logIn = logIn;
     service.getUser = getUser;
-
-    window.User = service;
 
     return service;
   })
