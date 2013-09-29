@@ -13,6 +13,7 @@ exports.create = function(req,res){
 	trans.amount = req.body.amount;
 	trans.currency = req.body.currency;
 	trans.description = req.body.description;
+	trans.geoLocation = req.body.geoLocation;
 	trans.save(function(err, newTrans){
 		if (err) res.send({error: err});
 		res.send(newTrans);

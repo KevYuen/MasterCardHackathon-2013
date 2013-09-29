@@ -8,7 +8,16 @@ var transaction = new Schema({
 	recipient_id: {type:String, default:null},
 	amount: Number,
 	currency: String,
-	description: String
+	description: String,
+	geoLocation:
+		{	
+			timestamp: Date,
+			longitude: Number,
+			latitude: Number,
+			accuracy: Number,
+			speed: Number,
+			heading: Number
+		}
 });
 
 module.exports = mongoose.model('Transaction', transaction);

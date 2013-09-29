@@ -3,6 +3,7 @@ var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
 
 var user = new Schema({
+	name: String,
 	email: String,
 	cards: [{cardNumber: Number, expiryMonth: Number, expiryDate: Number, requestId:{type:Number, default:0}}],
 	geoLocation:
@@ -14,6 +15,7 @@ var user = new Schema({
 			speed: Number,
 			heading: Number
 		},
+	photo: String,
 	password: String,
 	address: String
 });
