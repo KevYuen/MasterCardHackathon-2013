@@ -7,61 +7,91 @@ angular.module('myApp.controllers', []).
 
   })
 
-  .controller('TransNewCtrl', function($scope, Geo, Trans) {
+  .controller('TransNewCtrl', function($scope, $routeParams, Geo, Trans) {
     $scope.amount = '';
     $scope.description = '';
     $scope.position = false;
     $scope.result = false;
+    $scope.transId = false;
+
+    // Edit a previous transaction
+    if ( $routeParams.transId ) {
+      Trans.getTransaction( $routeParams.transId ).then(
+        // Success
+        function( trans ) {
+          Trans.currentTransaction = trans;
+          $scope.amount = trans.amount;
+          $scope.description = trans.description;
+          $scope.position = trans.geoLocation;
+          $scope.transId = trans._id;
+        },
+        // Error
+        function( trans ) {
+
+        }
+      );
+    }
 
     $scope.save = function( e ) {
       console.log( 'Save clicked' );      
       // createTransaction();
 
       // TODO: validate amount to be rounded to 2 decimal places
+      
+      var onSuccess = function( resp ) {
+        resp.success = true;
+        $scope.result = resp;
+      };
+
+      var onError = function( resp ) {
+        resp.success = false;
+        $scope.result = resp;
+      };
   
       $scope.amount = ~~$scope.amount; // coerce into a number
-      Trans.createTransaction( $scope.amount, $scope.description )
-      .then(
-        // Success
-        function( resp ) {
-          resp.success = true;
-          $scope.result = resp;
-        },
 
-        // Error
-        function( resp ) {
-          resp.success = false;
-          $scope.result = resp;
-        }
-      );
+      if ( $( e.currentTarget ).data( 'transId' ) ) {
+        console.log( 'Updating instead of creating transaction' );
+        Trans.updateTransaction({ action:'Modify', amount: $scope.amount, description: $scope.description })
+          .then( onSuccess, onError );
+      }
+      else {
+        Trans.createTransaction( $scope.amount, $scope.description )
+        .then( onSuccess, onError );
+      }
     };
 
     $scope.donk = function( e ) {
       console.log( 'Donk clicked' );
 
-      Trans.createTransaction( $scope.amount, $scope.description )
-      .then(
-        // Success
-        function( resp ) {
-          var date = new Date( resp.position.timestamp ),
-            dateString = date.toLocaleString();
-          resp.position.dateString = dateString;
+      var onSuccess = function( resp ) {
+        var date = new Date( resp.position.timestamp ),
+          dateString = date.toLocaleString();
+        resp.position.dateString = dateString;
 
-          resp.success = true;
-          $scope.result = resp;
+        resp.success = true;
+        $scope.result = resp;
 
-          // TODO: initiate actual transaction process here
-          console.log( 'Should make API call to start transaction now' );
+        // TODO: initiate actual transaction process here
+        console.log( 'Should make API call to start transaction now' );
 
-          window.location.hash = '#/buyers';
-        },
+        window.location.hash = '#/buyers';
+      };
 
-        // Error
-        function( resp ) { 
-          resp.success = false;
-          $scope.result = resp;
-        }
-      );
+      var onError = function( resp ) { 
+        resp.success = false;
+        $scope.result = resp;
+      };
+
+      if ( $( e.currentTarget ).data( 'transId' ) ) {
+        console.log( 'Updating instead of creating transaction' );
+        Trans.updateTransaction({ action: 'Modify', amount: $scope.amount, description: $scope.description })
+          .then( onSuccess, onError );
+      }
+      else {
+        Trans.createTransaction( $scope.amount, $scope.description )
+          .then( onSuccess, onError );
+      }
     };
 
     $scope.cancel = function( e ) {
@@ -109,23 +139,39 @@ angular.module('myApp.controllers', []).
     };
   })
 
-  .controller('NavBarCtrl', function($scope, $location, User){
+  .controller('NavBarCtrl', function($scope, $location, User) {
     $scope.location = $location;
   })
-  .controller('TransCtrl', function($scope, Trans){
+
+  .controller('TransCtrl', function($scope, Trans) {
     $scope.transactions = Trans.transactions;
     Trans.getTransactions().then(
       // Success
       function( data ) {
         $scope.transactions = data;
       },
-
       // Error
       function( data ) {
         // TODO: error handling code for this
       }
     );
+
+    $scope.selectTrans = function( e ) {
+      var trans = $(e.currentTarget),
+        status = trans.data( 'transStatus' ),
+        transId = trans.data( 'transId' );
+      trans.addClass( 'active' )
+      console.log( 'Trans clicked - ' + transId + ': ' + status );
+
+      if ( status == 'Unsent' ) {
+        window.location.hash = '#/trans/' + transId;
+      }
+      else {
+        trans.removeClass( 'active' );
+      }
+    };
   })
+
   .controller('AppCtrl', function($scope, User, Accel){
     $scope.user = User;
     $scope.navigator = navigator;

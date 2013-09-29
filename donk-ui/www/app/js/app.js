@@ -7,6 +7,9 @@ angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives', 
     $routeProvider.when('/balance', 
     	{ templateUrl: 'partials/balance.html', controller: 'BalanceCtrl' }
   	);
+  	$routeProvider.when('/trans/:transId', 
+  		{	templateUrl: 'partials/trans_new.html', controller: 'TransNewCtrl' }
+		);
     $routeProvider.when('/trans/new', 
     	{ templateUrl: 'partials/trans_new.html', controller: 'TransNewCtrl' }
   	);
