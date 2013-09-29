@@ -17,6 +17,24 @@ angular.module('myApp.services', [])
         geoLocation: null
       },
 
+      getTransaction: function( transId ) {
+        var deferred = $q.defer(),
+          url = API_DOMAIN + '/trans/' + transId;
+
+        $http({
+          method: 'GET',
+          url: url
+        })
+        .success( function( data ) {
+          deferred.resolve( data );
+        })
+        .error( function( data ) {
+          deferred.reject( data );
+        });
+
+        return deferred.promise;
+      },
+
       getTransactions: function() {
         var deferred = $q.defer(),
           url = API_DOMAIN + '/user/' + User.userId + '/trans/recipient',
@@ -86,41 +104,43 @@ angular.module('myApp.services', [])
       },
 
       updateTransaction: function( update ) {
-      	// TODO: Validate that an action is set in the update JSON data
+        // TODO: Validate that an action is set in the update JSON data
 
-      	var deferred = $q.defer(),
-      		url = API_DOMAIN + '/user/' + User.userId + '/trans/' + this.currentTransaction._id,
-      		that = this;
+        var deferred = $q.defer(),
+          url = API_DOMAIN + '/user/' + User.userId + '/trans/' + this.currentTransaction._id,
+          that = this;
 
-      	Geo.saveLocation().then(
-      		// Success
-      		function( position ) {
-      			update.geoLocation = position;
-      			deferred.notify( that.currentTransaction );
+        // TODO: Consider not fetching geoLocation again when action = "Start"
 
-		      	$http({
-		      		method: 'PUT',
-		      		url: url,
-		      		data: update
-		      	})
-		      	.success( function( data ) {
-		      		console.log( 'updateTransaction success: ' + JSON.stringify( data, undefined, 2 ) );
-		      		that.currentTransaction = data;
-		      		deferred.resolve( data );
-		      	})
-		      	.error( function( data ) {
-		      		console.log( 'updateTransaction error: ' + JSON.stringify( data, undefined, 2 ) );
-		      		deferred.reject( data );
-		      	});
-      		},
+        Geo.saveLocation().then(
+          // Success
+          function( position ) {
+            update.geoLocation = position;
+            deferred.notify( that.currentTransaction );
 
-      		// Error
-      		function( resp ) {
-      			deferred.reject( resp );
-      		}
-    		);
+            $http({
+              method: 'PUT',
+              url: url,
+              data: update
+            })
+            .success( function( data ) {
+              console.log( 'updateTransaction success: ' + JSON.stringify( data, undefined, 2 ) );
+              that.currentTransaction = data;
+              deferred.resolve( data );
+            })
+            .error( function( data ) {
+              console.log( 'updateTransaction error: ' + JSON.stringify( data, undefined, 2 ) );
+              deferred.reject( data );
+            });
+          },
 
-      	return deferred.promise;
+          // Error
+          function( resp ) {
+            deferred.reject( resp );
+          }
+        );
+
+        return deferred.promise;
       },
 
       getClosestBuyers: function() {
@@ -139,6 +159,58 @@ angular.module('myApp.services', [])
         .error( function( data ) {
           console.log( 'getClosestBuyers error: ' );
           console.log( JSON.stringify( data, undefined, 2 ) );
+          deferred.reject( data );
+        });
+
+        return deferred.promise;
+      },
+
+      repeatedlyPoll: function() {
+        var that = this;
+        var intervalHandler = setInterval(function() {
+          that.pollForIncomingTransaction().then(
+            // Success
+            function( data ) {
+              clearInterval( intervalHandler );
+              window.location.hash = '#/incoming/recipient/' + data.user._id + '/trans/' + data.transaction._id;
+            },
+            // Error
+            function( data ) {
+              console.log( 'Failed to poll!' );
+              console.log( JSON.stringify( data, undefined, 2 ) );
+            }
+          );
+        }, 1000);
+      },
+
+      pollForIncomingTransaction: function() {
+        var deferred = $q.defer(),
+          url = API_DOMAIN + '/user/' + User.userId + '/poll';
+
+        $http({
+          method: 'GET',
+          url: url
+        })
+        .success( function( data ) {
+          if ( data ) {
+            console.log( 'There is an incoming request' );
+            User.getUser( data.recipientId ).then(
+              // Success
+              function( userData ) {
+                deferred.resolve({
+                  user: userData,
+                  transaction: data
+                });
+              },
+
+              // Error
+              function( resp ) {
+                deferred.reject( resp );
+              }
+            );
+          }
+        })
+        .error( function( data ) {
           deferred.reject( data );
         });
 
@@ -176,7 +248,7 @@ angular.module('myApp.services', [])
 
   })
   .value('API_DOMAIN', 'http://ec2-54-227-22-178.compute-1.amazonaws.com')
-  .factory('User', function($http, API_DOMAIN){
+  .factory('User', function($q, $http, API_DOMAIN){
     //data and functions related to logging in and out.
 
     var service = {
@@ -206,7 +278,26 @@ angular.module('myApp.services', [])
       });
     };
 
+    var getUser = function( userId ) {
+      var url = API_DOMAIN + '/user/' + userId,
+        deferred = $q.defer();
+
+      $http({
+        method: 'GET',
+        url: url
+      })
+      .success( function( data ) {
+        deferred.resolve( data );
+      })
+      .error( function( data ) {
+        deferred.reject( data );
+      });
+
+      return deferred.promise;
+    }
+
     service.logIn = logIn;
+    service.getUser = getUser;
 
     window.User = service;
 
@@ -216,7 +307,7 @@ angular.module('myApp.services', [])
     // Enables capture of geolocation data
     var service = {
       getDeviceLocation: function() {
-      	var deferred = $q.defer();
+        var deferred = $q.defer();
 
         var onSuccess = function( position ) {
           console.log( 'getDeviceLocation success: ' );
@@ -234,7 +325,7 @@ angular.module('myApp.services', [])
         };
 
         var onError = function( resp ) {
-        	deferred.reject( resp );
+          deferred.reject( resp );
         };
 
         // Proxies the PhoneGap geolocation API
@@ -244,7 +335,7 @@ angular.module('myApp.services', [])
       },
 
       saveLocation: function() {
-				var deferred = $q.defer();
+        var deferred = $q.defer();
 
         var onSuccess = function( position ) {
           var url = API_DOMAIN + '/user/' + User.userId + '/geo/update';
@@ -268,7 +359,7 @@ angular.module('myApp.services', [])
         };
 
         var onError = function( resp ) {
-        	deferred.reject( resp );
+          deferred.reject( resp );
         }
 
         this.getDeviceLocation().then(onSuccess, onError);

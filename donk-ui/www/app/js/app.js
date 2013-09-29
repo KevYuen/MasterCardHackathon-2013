@@ -8,5 +8,6 @@ angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives', 
     $routeProvider.when('/trans/new', {templateUrl: 'partials/trans_new.html', controller: 'TransNewCtrl'});
     $routeProvider.when('/buyers', {templateUrl: 'partials/buyers.html', controller: 'BuyersCtrl'});
     $routeProvider.when('/trans', {templateUrl: 'partials/trans.html', controller: 'TransCtrl'});
+    $routeProvider.when('/incoming/recipient/:recipientId/trans/:transId', {templateUrl: 'partials/incoming.html', controller: 'IncomingCtrl'});
     $routeProvider.otherwise({redirectTo: '/view1'});
   }]);

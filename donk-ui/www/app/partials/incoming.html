@@ -1,0 +1,24 @@
+<div class="container">
+	<div class="row spacer">
+		<div class="col-xs-12">
+			<form role="form" ng-show="trans && !error">
+        <div class="form-group">
+          <label for="inputAmount" class="control-label">Amount</label>
+          <input type="text" class="form-control" id="inputAmount" value="{{ trans.amount }}" disabled>
+        </div>
+        <div class="form-group">
+          <label for="inputDescription" class="control-label">Description</label>
+          <input type="text" class="form-control" id="inputDescription" value="{{ trans.description }}" disabled>
+        </div>
+        <input type="submit" class="btn btn-success btn-block" value="Send" name="send" id="btnSend" ng-click="send($event, true)">
+        <input type="submit" class="btn btn-danger btn-block" value="Reject" name="reject" id="btnReject" ng-click="send($event, false)">
+			</form>
+
+			<div class="alert alert-danger" ng-show="error">
+        <h4>Error</h4>
+				<pre>{{ JSON.stringify( error, undefined, 2 ) }}</pre>
+        <button class="btn btn-primary" ng-click="dismissError()">Dismiss Error</button>
+			</div>
+		</div>
+	</div>
+</div>
