@@ -10,9 +10,27 @@
   .spacer {
     margin-top: 20px;
   }
+  .fullscreen {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    background-color: white;
+    padding: 10px;
+  }
   </style>
 </head>
-<body ng-cloak>
+<body ng-cloak ng-controller='LogInCtrl'>
+  <div class='fullscreen' ng-hide='user.isLoggedIn'>
+    <form role='form'>
+      <div class='form-group'>
+    <label>Email:</label><input type='text' class="form-control" ng-model='email'><br>
+    <label>Password:</label> <input type='text' class="form-control" ng-model='password'><br>
+    <button class='btn btn-primary btn-block' ng-click='logIn()'>Log In</button>
+    </div>
+    </form>
+
+  </div>
   <div class="container">
     <div class='row' ng-controller="NavBarCtrl">
         <div class='col-xs-12'>
@@ -27,7 +45,8 @@
 
   <div ng-view></div>
 
-  <!-- script src="lib/cordova/cordova.js"></script -->
+  <script src="lib/json2/json2.js"></script>
+  <script src="lib/cordova/cordova.js"></script>
   <script src="lib/jquery/jquery-1.10.2.min.js"></script>
   <script src="lib/angular/angular.js"></script>
   <script src="lib/angular/angular-route.js"></script>

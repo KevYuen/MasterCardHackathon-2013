@@ -1,7 +1,7 @@
 var express = require('express'),
     mongoose = require('mongoose'),
-    app = module.exports = express();    
- 
+    mc = require('./libs/mc'),
+    app = module.exports = express();
  
 mongoose.connect(process.env.Mongo|| "mongodb://localhost/mastercard");
 
@@ -48,3 +48,17 @@ app.get("/trans/:id", trans.getSingleTrans);
 
 app.listen(3000);
 console.log('Express server listening on port 3000');
+
+function responseHandler(res) {
+    console.log("status: ", res.statusCode);
+    console.log("header: ", res.headers);
+    res.on('data', function(d) {
+        process.stdout.write(d);
+    });
+}
+
+/*mc.post('sandbox.api.mastercard.com',
+       '/atms/v1/atm',
+       { "Format": "XML", "PageOffset" : "0", "PageLength" : "10", "AddressLine1" : "70%20Main%20St", "PostalCode" : "63366", "Country" : "USA" },
+       "<xml>data</xml>",
+        responseHandler);*/
