@@ -71,6 +71,10 @@ exports.updateTrans = function(req, res){
 		//set the status to Complete or Rejected
         Trans.findOne({_id: req.params.trans_id}, function(err, trans){
             if(err) errorhandler(res, err);
+            if(trans.status != "Sender Set"){
+            	res.status(400);
+            	res.send({error: "you have not selected the sender!"});
+            }
             User.findOne({_id: trans.senderId}, function(err, sender){
                 if(err) errorhandler(res, err);
                 User.findOne({_id: trans.recipientId}, function(err, recipient){
