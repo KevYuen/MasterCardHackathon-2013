@@ -7,6 +7,7 @@
 // In this case it is a simple value service.
 angular.module('myApp.services', [])
   .value('version', '0.1')
+  .value('POLL_INTERVAL', 3000)
   .factory('Trans', function( $q, $http, API_DOMAIN, User, Geo ){
 
     var service = {
@@ -44,13 +45,13 @@ angular.module('myApp.services', [])
           url: url
         })
         .success( function( data ) {
-          console.log( 'getTransactions success: ' );
+          // console.log( 'getTransactions success: ' );
           // console.log( JSON.stringify( data, undefined, 2 ) );
           that.transactions = data;
           deferred.resolve( data );
         })
         .error( function( data ) {
-          console.log( 'getTransactions error: ' );
+          // console.log( 'getTransactions error: ' );
           // console.log( JSON.stringify( data, undefined, 2 ) );
           deferred.reject( data );
         });
@@ -94,7 +95,7 @@ angular.module('myApp.services', [])
         };
 
         var onError = function( data ) {
-          console.log( 'createTransaction - location save failed' );
+          // console.log( 'createTransaction - location save failed' );
           deferred.reject( data );
         };
 
@@ -152,12 +153,12 @@ angular.module('myApp.services', [])
           url: url
         })
         .success( function( data ) {
-          console.log( 'getClosestBuyers success: ' );
+          // console.log( 'getClosestBuyers success: ' );
           // console.log( JSON.stringify( data, undefined, 2 ) );
           deferred.resolve( data );
         })
         .error( function( data ) {
-          console.log( 'getClosestBuyers error: ' );
+          // console.log( 'getClosestBuyers error: ' );
           // console.log( JSON.stringify( data, undefined, 2 ) );
           deferred.reject( data );
         });
@@ -178,13 +179,13 @@ angular.module('myApp.services', [])
         };
 
         var onPollError = function( data ) {
-          console.log( 'Failed to poll!' );
+          // console.log( 'Failed to poll!' );
           // console.log( JSON.stringify( data, undefined, 2 ) );
         };
 
         setTimeout(function() { 
           that.pollForIncomingTransaction().then( onPoll, onPollError );
-        }, 1000 );
+        }, POLL_INTERVAL );
       },
 
       pollForIncomingTransaction: function() {
@@ -197,7 +198,7 @@ angular.module('myApp.services', [])
         })
         .success( function( data ) {
           if ( data && data.status == 'Sender Set' ) {
-            console.log( 'There is an incoming request' );
+            // console.log( 'There is an incoming request' );
 
             User.getUser( data.recipientId ).then(
               // Success
@@ -235,7 +236,7 @@ angular.module('myApp.services', [])
         }
 
         var onLocalError = function( data ) {
-          console.log( 'Failed to poll!' );
+          // console.log( 'Failed to poll!' );
           // console.log( JSON.stringify( data, undefined, 2 ) );
           onError && onError( data );
         }
@@ -243,7 +244,7 @@ angular.module('myApp.services', [])
         setTimeout(function() {
           var transId = that.currentTransaction._id;
           that.getTransaction( transId ).then( onLocalSuccess, onLocalError );
-        }, 1000 );
+        }, POLL_INTERVAL );
       },
 
       transactions: [
@@ -342,7 +343,7 @@ angular.module('myApp.services', [])
         var deferred = $q.defer();
 
         var onSuccess = function( position ) {
-          console.log( 'getDeviceLocation success: ' );
+          // console.log( 'getDeviceLocation success: ' );
           // console.log( JSON.stringify( position, undefined, 2 ) );
           var location = {
             timestamp: position.timestamp,
@@ -378,13 +379,13 @@ angular.module('myApp.services', [])
             data: position
           })
           .success( function( data ) {
-            console.log( 'saveLocation success: ' );
+            // console.log( 'saveLocation success: ' );
             // console.log( JSON.stringify( data, undefined, 2 ) );
             // Pre-process server response here and return data expected - nothing for now
             deferred.resolve( position );
           })
           .error( function( data ) {
-            console.log( 'Error saving location - server sent back: ' );
+            // console.log( 'Error saving location - server sent back: ' );
             // console.log( JSON.stringify( data, undefined, 2 ) );
             deferred.reject( data );
           });
@@ -469,7 +470,8 @@ angular.module('myApp.services', [])
       }
     }
 
-    window.setInterval(averageAndBroadcast, 3);
+    // Uncomment to re-enable accel sampling
+    // window.setInterval(averageAndBroadcast, 3);
 
     if (navigator.accelerometer){
 
@@ -479,8 +481,8 @@ angular.module('myApp.services', [])
         {frequency: 3000 }
       );
     } else {
-
-      window.addEventListener('deviceorientation', updateAccerometer);
+    	// Uncomment to re-enable accel
+      // window.addEventListener('deviceorientation', updateAccerometer);
     }
     return {};
     

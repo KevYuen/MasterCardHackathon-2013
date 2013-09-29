@@ -326,7 +326,7 @@ angular.module('myApp.controllers', []).
         var user_id = response.data.id;
 
         var expiry_array = $scope.expiry.split('/');
-        console.log(expiry_array);
+        // console.log(expiry_array);
 
         return $http({
           method: 'PUT',
