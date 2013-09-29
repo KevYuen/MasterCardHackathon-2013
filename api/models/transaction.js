@@ -3,9 +3,9 @@ var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
 
 var transaction = new Schema({
-	senderId: {type:String, default:null},
+	senderId: {type: String, default:null },
 	status: {type: String, default:"Unsent"},
-	recipientId: type:String,
+	recipientId: String,
 	amount: Number,
 	currency: String,
 	description: String,
