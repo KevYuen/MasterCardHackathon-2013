@@ -95,7 +95,17 @@ angular.module('myApp.controllers', []).
     		};
 
     	buyer.addClass( 'active' );
-    	Trans.updateTransaction( update );
+    	Trans.updateTransaction( update ).then(
+        // Success
+        function() {
+          // Redirect to page awaiting response
+          window.location.hash = '#/trans/response/' + Trans.currentTransaction._id;
+        },
+        // Error
+        function() {
+
+        }
+      );
     };
   })
 
@@ -189,6 +199,55 @@ angular.module('myApp.controllers', []).
     $scope.dismissError = function() {
       $scope.error = false;
     };
+  })
+
+  .controller( 'TransRespCtrl', function( $scope, $routeParams, Trans, User ) {
+    // var transId = $routeParams.transId;
+    $scope.status = 'waiting';
+    $scope.trans = Trans.currentTransaction;
+
+    var onComplete = function( data ) {
+      $scope.trans = data;
+      $scope.status = 'complete';      
+    };
+
+    var onReject = function( data ) {
+      User.getUser( data.senderId ).then(
+        // Success
+        function( userData ) {
+          $scope.trans = Trans.currentTransaction;
+          $scope.trans.user = userData;
+          $scope.status = 'reject';
+        },
+        // Error
+        function( resp ) {
+          $scope.trans = Trans.currentTransaction;
+          $scope.trans.user = { email: 'Unknown' };
+          $scope.status = 'error';
+        }
+      );      
+    };
+
+    var onError = function( errData ) {
+      $scope.status = 'error';
+      $scope.error = JSON.stringify( errData, undefined, 2 );
+    };
+
+    Trans.pollForDonkResponse(
+      // Success
+      function( data ) {
+        if ( data.status == 'Completed' )
+          onComplete( data );
+        else if ( data.status == 'Rejected' )
+          onReject( data );
+        else if ( data.status == 'Error' )
+          onError( data );
+      },
+      // Error
+      function( errData ) {
+        onError( errData );
+      }
+    );
   })
 
   .controller('SignUpCtrl', function($scope, API_DOMAIN, $http){

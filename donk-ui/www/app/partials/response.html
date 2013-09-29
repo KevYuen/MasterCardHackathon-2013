@@ -1,0 +1,26 @@
+<div class="container">
+	<div class="row spacer">
+		<div class="col-xs-12">
+
+			<h4>Transaction called "{{ trans.description }}" of amount ${{ trans.amount }}</h4>
+
+			<div ng-show="status == 'waiting'" class="alert alert-info">
+				Waiting for response from sender...
+			</div>
+
+			<div ng-show="status == 'complete'" class="alert alert-success">
+				Transaction complete! You have just received ${{ trans.amount }} for {{ trans.description }}.
+			</div>
+
+			<div ng-show="status == 'reject'" class="alert alert-warning">
+				{{ trans.user.email }} rejected the payment for {{ trans.description }} of amount {{ trans.amount }} :( .
+			</div>
+
+			<div ng-show="status == 'error'" class="alert alert-danger">
+				Unfortunately there was an error - server sent:
+				<pre>{{ error }}</pre>
+			</div>
+
+		</div>
+	</div>
+</div>

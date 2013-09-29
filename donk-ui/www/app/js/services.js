@@ -217,6 +217,28 @@ angular.module('myApp.services', [])
         return deferred.promise;
       },
 
+      pollForDonkResponse: function( onSuccess, onError ) {
+        var that = this;
+        var intervalHandler = setInterval(function() {
+          that.getTransaction( that.currentTransaction._id ).then(
+            // Success
+            function( data ) {
+              if ( data.status !== "Sender Set" ) {
+                clearInterval( intervalHandler );
+                that.currentTransaction = data;
+                onSuccess && onSuccess( data );   
+              }
+            },
+            // Error
+            function( data ) {
+              console.log( 'Failed to poll!' );
+              console.log( JSON.stringify( data, undefined, 2 ) );
+              onError && onError( data );
+            }
+          );
+        }, 1000);
+      },
+
       transactions: [
         {
           amount: 350,
