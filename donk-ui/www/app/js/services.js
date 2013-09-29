@@ -444,6 +444,7 @@ angular.module('myApp.services', [])
       });
 
       var currentMin = 1;
+      var currentMax = -1;
       for(var i=0; i< cloneLog.alpha.length; i++){
         for(var j=0; j< cloneLog.alpha.length; j++){
           if(i != j){
@@ -452,13 +453,18 @@ angular.module('myApp.services', [])
               [cloneLog.alpha[j], cloneLog.beta[j], cloneLog.gamma[j]]
             );
             currentMin = Math.min(result, currentMin);
+            currentMax = Math.max(result, currentMax);
           }
         }
       }
       //console.log(currentMin);
       retArray.currentMin = currentMin;
+      retArray.currentMax = currentMax;
 
       $rootScope.$broadcast('accelerometer', retArray);
+      if (retArray.gamma > 200) {
+        $rootScope.$broadcast('DONK', retArray);
+      }
     }
 
     window.setInterval(averageAndBroadcast, 3);
@@ -474,13 +480,7 @@ angular.module('myApp.services', [])
 
       window.addEventListener('deviceorientation', updateAccerometer);
     }
-    var service  = {
-      signalTest: function(){
-        $rootScope.$broadcast('accelerometer', {x: 1, y: 1, z: 1});
-      }
-    };
-    window.Accel = service;
-    return service;
+    return {};
     
   })
 

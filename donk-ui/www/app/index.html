@@ -28,7 +28,7 @@
 </head>
 <body ng-cloak ng-controller='AppCtrl'>
   <div class='fullscreen' ng-hide='user.isLoggedIn' ng-controller="LogInCtrl">
-    <form role='form'>
+    <form role='form' ng-hide='showSignUp'>
       <div class='form-group'>
       <label>Email:</label><input type='text' class="form-control" ng-model='email'><br>
       <label>Password:</label> <input type='text' class="form-control" ng-model='password'><br>
@@ -36,10 +36,12 @@
       </div>
     </form>
 
-    <div ng-controller="SignUpCtrl">
-      <button class='btn btn-info' ng-click='showSignUp = !showSignUp'>Sign Up</button>
+    <button class='btn btn-info' ng-click='showSignUp = !showSignUp'>Sign Up</button>
 
-      <div ng-show='showSignUp'>
+    <div ng-show='showSignUp'>
+      
+
+      <div ng-controller="SignUpCtrl">
         <form>
           <div class='form-group'>
             <label>Email:</label><input type='text' class="form-control" ng-model='email'><br>
@@ -74,7 +76,8 @@
   Gamma: {{accel.gamma}}<br>
   Alpha: {{accel.alpha}}<br>
   Beta: {{accel.beta}}<br>
-  Current Minimum Dot Product: {{accel.currentMin}}
+  Current Minimum Dot Product: {{accel.currentMin}} <br>
+  Current Maximum Dot Product: {{accel.currentMax}} 
   
 
   <script no-src="lib/json2/json2.js"></script>

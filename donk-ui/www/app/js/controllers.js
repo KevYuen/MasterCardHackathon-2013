@@ -155,7 +155,11 @@ angular.module('myApp.controllers', []).
     $scope.setRecieve = function(recieve){
       //make into boolean
       $scope.canRecieve = !!recieve;
-    };  
+    };
+    $scope.displaySignUp = true;
+    $scope.hideSignUp = function(){
+      $scope.displaySignUp = false;
+    }
   })
 
   .controller( 'IncomingCtrl', function( $scope, $routeParams, User, Trans ) {
@@ -235,6 +239,8 @@ angular.module('myApp.controllers', []).
       $scope.status = 'error';
       $scope.error = JSON.stringify( errData, undefined, 2 );
     };
+
+    
 
     Trans.pollForDonkResponse(
       // Success
