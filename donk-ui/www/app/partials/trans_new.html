@@ -18,19 +18,22 @@
     </div>
   </div>
 
-  <div class="row spacer">
-    <div class="col-xs-12">
-      <div ng-show="result" class="panel ng-class: { 'panel-success': result.success, 'panel-danger': !result.success };">
-        <div class="panel-heading">
-          <h3 class="panel-title">Result</h3>
-        </div>
-        <div class="panel-body">
-          <p ng-show="result.position">On {{ result.position.dateString }}, you were at {{ result.position.latitude }}, {{ result.position.longitude }} - accurate within a {{ result.position.accuracy }} meter radius.</p>
-
-          <p ng-show="result.transaction">You setup a transaction for {{ result.transaction.description }} of amount {{ result.transaction.amount }}.</p>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div class="modal fade" id="saveResult">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	        <h4 class="modal-title">{{ result.success ? 'Success':'Error' }}</h4>
+	      </div>
+	      <div class="modal-body">
+	      	<p ng-show="!result.success">{{ result.error }}</p>
+					<p ng-show="result.transaction">You successfully setup a transaction for {{ result.transaction.description }} of amount {{ result.transaction.amount }}.</p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+	      </div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 
 </div>

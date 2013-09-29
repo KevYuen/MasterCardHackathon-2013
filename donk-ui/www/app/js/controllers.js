@@ -41,11 +41,13 @@ angular.module('myApp.controllers', []).
       var onSuccess = function( resp ) {
         resp.success = true;
         $scope.result = resp;
+				$('#saveResult').modal();
       };
 
       var onError = function( resp ) {
         resp.success = false;
         $scope.result = resp;
+        $('#saveResult').modal();
       };
   
       $scope.amount = ~~$scope.amount; // coerce into a number
