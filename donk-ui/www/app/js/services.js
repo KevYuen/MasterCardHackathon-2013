@@ -316,7 +316,7 @@ angular.module('myApp.services', [])
       });
 
       return deferred.promise;
-    }
+    };
 
     service.logIn = logIn;
     service.getUser = getUser;
@@ -408,6 +408,9 @@ angular.module('myApp.services', [])
       //accelLog.push([acceleration.alpha, acceleration.beta, acceleration.gamma]);
       
     };
+    var dotProduct = function(v1, v2){
+      return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
+    };
     var averageAndBroadcast = function(){
       if (accelLog.alpha.length < 20){
         return;
@@ -423,15 +426,22 @@ angular.module('myApp.services', [])
       var retArray = {};
       _.each(['alpha', 'beta', 'gamma'], function(key){
         retArray[key] = _.max(cloneLog[key]) - _.min(cloneLog[key]);
-      })
-      /*for (var i=0; i < cloneLog.length; i++){
-        alpha += cloneLog[i][0];
-        beta += cloneLog[i][1];
-        gamma += cloneLog[i][2];
+      });
+
+      var currentMin = 1;
+      for(var i=0; i< cloneLog.alpha.length; i++){
+        for(var j=0; j< cloneLog.alpha.length; j++){
+          if(i != j){
+            var result = dotProduct(              
+              [cloneLog.alpha[i], cloneLog.beta[i], cloneLog.gamma[i]],
+              [cloneLog.alpha[j], cloneLog.beta[j], cloneLog.gamma[j]]
+            );
+            currentMin = Math.min(result, currentMin);
+          }
+        }
       }
-      alpha = alpha / cloneLog.length;
-      beta = beta / cloneLog.length;
-      gamma = gamma / cloneLog.length;*/
+      //console.log(currentMin);
+      retArray.currentMin = currentMin;
 
       $rootScope.$broadcast('accelerometer', retArray);
     }
