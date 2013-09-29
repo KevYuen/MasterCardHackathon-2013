@@ -144,7 +144,7 @@ exports.getSingleTrans = function(req, res){
 
 /*
  * get all requests for the user
- * GET /trans/id/poll
+ * GET /user/id/poll
  * Server receive: {}
  * Server send : {trans}
  */
@@ -152,7 +152,7 @@ exports.pollRequests = function(req, res){
 	Trans.findOne({senderId: req.params.id}, function(err, trans){
 		if (err) errorhandler(res, err);
 		res.send(trans);
-	})
+	});
 }
 
 function errorhandler(res, err){
