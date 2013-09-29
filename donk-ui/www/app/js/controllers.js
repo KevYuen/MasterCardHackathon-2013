@@ -309,7 +309,7 @@ angular.module('myApp.controllers', []).
     );
   })
 
-  .controller('SignUpCtrl', function($scope, API_DOMAIN, $http, Geo){
+  .controller('SignUpCtrl', function($scope, API_DOMAIN, $http, Geo, User){
     $scope.signUp = function(){
       //Create the user
       $http({
