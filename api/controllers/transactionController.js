@@ -1,5 +1,16 @@
 //transaction controller
-var Trans = require('../models/transaction.js');
+var Trans = require('../models/transaction.js'),
+    User = require('../models/user.js'),
+    mc = require('../libs/mc'),
+    utils = require('../libs/utils');
+
+
+function responseHandler(res) {
+    console.log("status: ", res.statusCode);
+    //res.on('data', function(d) {
+    //    process.stdout.write(d);
+    //});
+}
 
 /*
  * Create a new transaction
@@ -58,6 +69,40 @@ exports.updateTrans = function(req, res){
 		//start the transaction
 		//set the transaction as started
 		//set the status to Complete or Rejected
+        Trans.findOne({_id: req.params.trans_id}, function(err, trans){
+            if(err) errorhandler(res, err);
+            User.findOne({_id: trans.senderId}, function(err, sender){
+                if(err) errorhandler(res, err);
+                User.findOne({_id: trans.recipientId}, function(err, recipient){
+                    if(err) errorhandler(res, err);
+                    var data = {
+                                    hours: utils.getHours(),
+                                    minutes: utils.getMinutes(),
+                                    day: utils.getDay(),
+                                    month: utils.getMonth(),
+                                    seconds: utils.getSeconds(),
+                                    sender_card: sender.cards[0].cardNumber,
+                                    sender_month: sender.cards[0].expiryMonth,
+                                    sender_year: sender.cards[0].expiryYear,
+                                    sender_name: sender.name,
+                                    amount: trans.amount,
+                                    receiver_name: recipient.name,
+                                    receiver_card: recipient.cards[0].cardNumber,
+                                    transaction_number: utils.getTransactionId()
+                               }
+    
+                    mc.post('sandbox.api.mastercard.com',
+                    '/moneysend/v1/transfer',
+                    { "Format": "XML" },
+                    utils.resolveTemplate('../templates/CreateTransferRequest.xml', data),
+                    function(result){
+                        res.status = result.statusCode;
+                        res.send(trans);
+                    });
+                });        
+             });
+        }); 
+
 	} else if (action == "Cancel"){
 		//cancel the transaction
 		Trans.remove(conditions, function(err){

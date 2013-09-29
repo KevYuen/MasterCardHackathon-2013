@@ -52,6 +52,7 @@ app.get("/trans/:id", trans.getSingleTrans);
 app.listen(3000);
 console.log('Express server listening on port 3000');
 
+/*
 function responseHandler(res) {
     console.log("status: ", res.statusCode);
     res.on('data', function(d) {
@@ -69,7 +70,7 @@ var data = {
            }
 var template = utils.resolveTemplate('./templates/CreateTransferRequest.xml', data);
 console.log(template);
-/*
+
 mc.post('sandbox.api.mastercard.com',
        '/moneysend/v1/transfer',
        { "Format": "XML" },

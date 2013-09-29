@@ -63,3 +63,11 @@ exports.getSeconds = function() {
     }
     return "" + seconds;
 }
+
+exports.getTransactionId = function() {
+    var transId = "";
+    for(var i = 0; i < 19; i++) {
+        transId = transId + Math.floor(Math.random() * 10);
+    }
+    return transId; 
+}

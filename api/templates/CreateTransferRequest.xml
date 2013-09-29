@@ -2,7 +2,7 @@
 <TransferRequest>
    <LocalDate>{month}{day}</LocalDate>
    <LocalTime>{hours}{minutes}{seconds}</LocalTime>
-   <TransactionReference>{transactionNumber}</TransactionReference>
+   <TransactionReference>{transaction_number}</TransactionReference>
    <SenderName>{sender_name}</SenderName>
    <SenderAddress>
       <Line1>123 Main Street</Line1>
