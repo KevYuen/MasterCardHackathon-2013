@@ -108,7 +108,7 @@ exports.updateTrans = function(req, res){
                     });
                 }catch(e){
                 	res.status(500);
-                	res.send({error:"T.T someone broke"});
+                	res.send({error:e});
                 }
                 });        
              });
