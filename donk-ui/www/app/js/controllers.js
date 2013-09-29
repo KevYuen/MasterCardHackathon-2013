@@ -72,8 +72,19 @@ angular.module('myApp.controllers', []).
   .controller('NavBarCtrl', function($scope, $location, User){
     $scope.location = $location;
   })
-  .controller('TransCtrl', function($scope, Trans, User){
-    $scope.purchases = Trans.purchases;
+  .controller('TransCtrl', function($scope, Trans){
+    $scope.transactions = Trans.transactions;
+    Trans.getTransactions().then(
+      // Success
+      function( data ) {
+        $scope.transactions = data;
+      },
+
+      // Error
+      function( data ) {
+        // TODO: error handling code for this
+      }
+    );
   })
   .controller('AppCtrl', function($scope, User, Accel){
     $scope.user = User;
