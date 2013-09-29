@@ -128,3 +128,27 @@ angular.module('myApp.services', [])
 
     return service;
   })
+  .factory('Accel', function($rootScope, cordovaReady){
+    var updateAccerometer = function(acceleration){
+      //console.log(acceleration)
+      $rootScope.$broadcast('accelerometer', acceleration);
+    };
+    if (navigator.accelerometer){
+
+      var watchID = navigator.accelerometer.watchAcceleration(
+        updateAccerometer,
+        function(){},
+        {frequency: 3000 }
+      );
+    } else {
+      window.addEventListener('deviceorientation', updateAccerometer);
+    }
+    var service  = {
+      signalTest: function(){
+        $rootScope.$broadcast('accelerometer', {x: 1, y: 1, z: 1});
+      }
+    };
+    window.Accel = service;
+    return service;
+    
+  })

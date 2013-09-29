@@ -79,8 +79,15 @@ angular.module('myApp.controllers', []).
   .controller('TransCtrl', function($scope, Trans, User){
     $scope.purchases = Trans.purchases;
   })
-  .controller('AppCtrl', function($scope, User){
+  .controller('AppCtrl', function($scope, User, Accel){
     $scope.user = User;
+    $scope.navigator = navigator;
+    $scope.$on('accelerometer', function(ev, accel){
+      $scope.$apply(function(){
+        $scope.accel = accel;
+      });
+      //console.log(accel);
+    });
 
   })
   .controller('LogInCtrl', function($scope, User, API_DOMAIN){
