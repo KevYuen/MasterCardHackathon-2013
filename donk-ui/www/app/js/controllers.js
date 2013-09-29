@@ -120,7 +120,7 @@ angular.module('myApp.controllers', []).
         console.log(expiry_array);
 
         return $http({
-          method: 'POST',
+          method: 'PUT',
           url: API_DOMAIN + '/user/' + user_id + '/card/add',
           data: {
             cardNumber: $scope.cardNumber,
