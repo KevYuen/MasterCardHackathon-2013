@@ -129,6 +129,7 @@ angular.module('myApp.services', [])
     return service;
   })
   .factory('Accel', function($rootScope, cordovaReady){
+    var accelLog = [];
     var updateAccerometer = function(acceleration){
       //console.log(acceleration)
       $rootScope.$broadcast('accelerometer', acceleration);
