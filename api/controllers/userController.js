@@ -1,6 +1,7 @@
 //user controller
-var User = require('../models/user.js');
-
+var User = require('../models/user.js'),
+ geolib = require('geolib');
+   
 /*
  * login
  * POST - /user/login
@@ -115,15 +116,29 @@ exports.updateGeoLoc = function(req,res){
  * server send : {"users:[ _id: String]"}
  */
 exports.getCloseUsers = function(req, res){
-	User.update({_id: req.params.id}, {$set: {geoLocation: req.body}}, function(err){
-		if(err) res.send({error: err});
+	User.findOne({_id: req.params.id}, function(err, userdata){
+
+		var longitude = userdata.geoLocation.longitude,
+			latitude = userdata.geoLocation.latitude;
+			
+		User.find( { _id: {$ne: req.params.id}}, 'geoLocation', function(err, data){
+			if (err) res.send({error: err});
+			var coords = new Object();
+			var object;
+			for (var i = 0; i< data.length; i++){
+				object = {longitude: data[i].geoLocation.longitude, latitude: data[i].geoLocation.latitude};
+				//console.log(object);
+				coords[data[i]._id] = object;		
+			}
+			console.log(coords);
+			var list = geolib.orderByDistance({latitude: latitude, longitude: longitude}, coords);
+			for(var i = 0; i < list.length; i++){
+				if(list[i].distance > 50){
+					list.splice(i, 1);
+					i--;
+				}
+			}
+			res.send(list);
+		});
 	});
-
-	var timestamp = req.body.timestamp,
-		longitude = req.body.longitude;
-
-
 }
-
-
-

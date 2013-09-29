@@ -78,11 +78,18 @@ function _getBaseString(method, requestURL, auth) {
 }
 
 function _getSignature(baseString) {
-    var signer = crypto.createSign("RSA-SHA1");
+    var signer = crypto.createSign("SHA1");
     var rsa_key = _getPrivateKey();
     
     signer.update(baseString);
     return encodeURIComponent(signer.sign(rsa_key, output_format = "base64"));
+}
+
+function _getBodyHash(body) {
+    var shasum = crypto.createHash("sha1");
+    
+    shasum.update(body);
+    return shasum.digest('base64');
 }
 
 function _getAuthHeader(signature, auth){
@@ -96,7 +103,7 @@ function _getAuthHeader(signature, auth){
 }
 
 /**
- * mc.get('sandbox.api.mastercard.com/atms/v1/atm', { "Format" : "XML", "PageOffset" : 0 }, callback); 
+ * mc.get('sandbox.api.mastercard.com', '/atms/v1/atm', { "Format" : "XML", "PageOffset" : 0 }, callback); 
  */
 exports.get = function(hostname, path, params, callback) {
     var requestURL = _constructURL(hostname, path, params);
@@ -109,13 +116,13 @@ exports.get = function(hostname, path, params, callback) {
         oauth_signature_method  :   "RSA-SHA1"
     }; 
 
-    console.log("CONSUMER:["+_getConsumerKey()+"]");
     var baseString = _getBaseString("GET", requestURL, auth);    
     var signature = _getSignature(baseString);
     var authHeader = _getAuthHeader(signature, auth);
-    console.log("BASESTRING: " + baseString);
-    console.log("SIGNATURE: " + signature);
-    console.log("AUTHHEADER: " + authHeader);
+    //console.log("CONSUMER:["+_getConsumerKey()+"]");
+    //console.log("BASESTRING: " + baseString);
+    //console.log("SIGNATURE: " + signature);
+    //console.log("AUTHHEADER: " + authHeader);
    
     var updatedPath = path + "?";
     for(var key in params) {
@@ -132,29 +139,54 @@ exports.get = function(hostname, path, params, callback) {
         }
     };   
 
-    /*
-    var req = https.request(options, function(res) {
-        console.log("status: ", res.statusCode);
-        console.log("header: ", res.headers);
-        res.on('data', function(d) {
-            process.stdout.write(d);
-        });
-    });
-    */
-
-    console.log(callback);
     var req = https.request(options, callback);
     req.end();
 };
 
+/**
+ * mc.post('sandbox.api.mastercard.com', '/atms/v1/atm', { "Format" : "XML", "PageOffset" : 0 }, '<xml data>', callback); 
+ */
+exports.post = function(hostname, path, params, body, callback) {
+    var requestURL = _constructURL(hostname, path, params);
+   
+    var auth = {
+        oauth_consumer_key      :   _getConsumerKey(),
+        oauth_nonce             :   _getNonce(),
+        oauth_timestamp         :   _getTimestamp(),
+        oauth_version           :   "1.0",
+        oauth_signature_method  :   "RSA-SHA1"
+    };
 
+    if(body == null) { body = ""; }
 
-/*
-var base = getBaseString(method, requestURL, auth);
-var signature = getSignature(base);
-var authHeader = getAuthHeader(signature, auth);
+    var hashedBody = _getBodyHash(body);
+    console.log("HASH: " + hashedBody);
+    auth.oauth_body_hash = hashedBody;
 
-*/
-//console.log("BASESTRING: " + base + '\n');
-//console.log("SIGNATURE: " + signature + '\n');
-//console.log("AUTH HEADER: " + authHeader + '\n');
+    var baseString = _getBaseString("POST", requestURL, auth);
+    var signature = _getSignature(baseString);
+    var authHeader = _getAuthHeader(signature, auth);
+    //console.log("CONSUMER:["+_getConsumerKey()+"]");
+    //console.log("BASESTRING: " + baseString);
+    //console.log("SIGNATURE: " + signature);
+    //console.log("AUTHHEADER: " + authHeader);
+  
+    var updatedPath = path + "?";
+    for(var key in params) {
+        updatedPath += key + "=" + params[key] + "&";
+    }
+    updatedPath =  updatedPath.substr(0, updatedPath.length - 1);
+
+    var options = {
+        hostname: hostname,
+        method: 'POST',
+        path: updatedPath,
+        headers: {
+            Authorization: authHeader
+        }
+    };
+
+    var req = https.request(options, callback);
+    req.write(body);
+    req.end();
+};
