@@ -41,6 +41,7 @@ exports.create = function(req,res){
 	var user = new User;
 	user.email = req.body.email;
 	user.cards = [];
+	user.name = req.body.name;
 	user.address = req.body.address;
 	user.password = req.body.password;
 	user.save(function(err, user){

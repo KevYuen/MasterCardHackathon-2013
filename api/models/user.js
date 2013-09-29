@@ -17,7 +17,10 @@ var user = new Schema({
 		},
 	photo: String,
 	password: String,
-	address: String
+	address: String,
+	spend: {type:Number, default: 0},
+	receive: {type:Number, default: 0}
+
 });
 
 module.exports = mongoose.model('User', user);
