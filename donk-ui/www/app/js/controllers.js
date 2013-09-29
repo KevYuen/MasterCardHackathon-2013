@@ -7,69 +7,75 @@ angular.module('myApp.controllers', []).
 
   })
 
-  .controller('TransNewCtrl', function($scope, Geo, User) {
+  .controller('TransNewCtrl', function($scope, Geo, Trans) {
     $scope.amount = '';
     $scope.description = '';
     $scope.position = false;
     $scope.result = false;
-    $scope.loggedIn = User.loggedIn;
 
     $scope.save = function( e ) {
       console.log( 'Save clicked' );      
-      createTransaction();
+      // createTransaction();
+
+      // TODO: validate amount to be rounded to 2 decimal places
+  
+      $scope.amount = ~~$scope.amount; // coerce into a number
+      Trans.createTransaction( $scope.amount, $scope.description )
+      .then(
+        // Success
+        function( resp ) {
+          console.log( 'Transaction created: ' );
+          console.log( JSON.stringify( resp, undefined, 2 )  );
+
+          resp.success = true;
+          $scope.result = resp;
+        },
+
+        // Error
+        function( resp ) {
+          console.log( 'Error TransNewCtrl: ' + JSON.stringify( resp, undefined, 2 ) );
+          resp.success = false;
+          $scope.result = resp;
+        }
+      );
     };
 
     $scope.donk = function( e ) {
       console.log( 'Donk clicked' );
-      $scope.save( e );
-      startTransaction();
+
+      Trans.createTransaction( $scope.amount, $scope.description )
+      .then(
+        // Success
+        function( resp ) {
+          console.log( 'Transaction created: ' );
+          console.log( JSON.stringify( resp, undefined, 2 )  );
+
+          var date = new Date( resp.position.timestamp ),
+            dateString = date.toLocaleString();
+          resp.position.dateString = dateString;
+
+          resp.success = true;
+          $scope.result = resp;
+
+          // TODO: initiate actual transaction process here
+          console.log( 'Should make API call to start transaction now' );
+        },
+
+        // Error
+        function( resp ) { 
+          console.log( 'Error TransNewCtrl: ' + JSON.stringify( resp, undefined, 2 ) );
+          $scope.$apply(function() {
+            resp.success = false;
+            $scope.result = resp;
+          });
+        }
+      );
     };
 
     $scope.cancel = function( e ) {
       console.log( 'Cancel clicked' );
       $scope.amount = '';
       $scope.description = '';
-    };
-
-    var createTransaction = function() {
-      // TODO: validate amount to be rounded to 2 decimal places
-      $scope.amount = ~~$scope.amount; // coerce into a number
-      $scope.result = $scope.result || { success: true };
-      $scope.result.trans = {
-        amount: $scope.amount,
-        description: $scope.description
-      };
-
-      // TODO: make API calls (via Service) to create transaction on server
-    };
-
-    var startTransaction = function() {
-      // Save Location -> Start transaction on success
-      var onSuccess = function( position ) {
-        console.log( 'Geolocation success: (' + position.latitude + ', ' + position.longitude + ')' );
-        var date = new Date( ~~position.timestamp ),
-          dateString = date.toLocaleString();
-
-        // $scope.$apply(function() {
-          position.dateString = dateString;
-          $scope.result = $scope.result || { success: true };
-          $scope.result.position = position;
-        // });
-
-        // TODO: initiate actual transaction process here
-        console.log( 'Should make API call to start transaction now' );
-      };
-
-      var onError = function( error ) {
-        console.log( 'Geolocation error: ' + JSON.stringify( error ) );
-        // $scope.$apply(function() {
-          $scope.result = $scope.result || {};
-          $scope.result.success = false;
-          $scope.position = error;
-        // });
-      };
-
-      Geo.saveLocation( User, onSuccess, onError );
     };
   })
 
