@@ -2,7 +2,7 @@
 
 
 // Declare app level module which depends on filters, and services
-angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives', 'myApp.controllers','ngRoute']).
+angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives', 'myApp.controllers','ngRoute','ngAnimate']).
   config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/balance', 
     	{ templateUrl: 'partials/balance.html', controller: 'BalanceCtrl' }
