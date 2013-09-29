@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="css/app.css"/>
   <link rel="stylesheet" href="bootstrap/css/bootstrap.css"/>
   <style>
+  .highlight {
+    color: red;
+  }
   .spacer {
     margin-top: 20px;
   }
@@ -67,8 +70,9 @@
   </div>
 
   <div ng-view></div>
-  Absolute: {{accel.absolute}}<br>
-  Gamma: {{accel.gamma}}<br>
+  <span style='color: red; font-size: 30px;' ng-show='accel.gamma > 150' >DONK!</span><br>
+  <span ng-class='highlight: accel.absolute > 150'>Absolute: {{accel.absolute}}<br></span>
+  <span ng-class='highlight: accel.gamma > 150'>Gamma: {{accel.gamma}}<br></span>
   Alpha: {{accel.alpha}}<br>
   Beta: {{accel.beta}}<br>
   
@@ -85,5 +89,6 @@
   <script src="js/filters.js"></script>
   <script src="js/directives.js"></script>
   <script src="bootstrap/js/bootstrap.js"></script>
+  <script src="lib/underscore/underscore.js"></script>
 </body>
 </html>
