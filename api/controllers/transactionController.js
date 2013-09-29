@@ -94,10 +94,11 @@ exports.updateTrans = function(req, res){
                     mc.post('sandbox.api.mastercard.com',
                     '/moneysend/v1/transfer',
                     { "Format": "XML" },
-                    utils.resolveTemplate('../templates/CreateTransferRequest.xml', data),
+                    utils.resolveTemplate('./templates/CreateTransferRequest.xml', data),
                     function(result){
-                        res.status = result.statusCode;
-                        res.send(trans);
+                    	transCleanup(sender, recipient, trans, result.statusCode);
+                    	res.status = result.statusCode;
+                    	res.send(trans);
                     });
                 });        
              });
@@ -144,4 +145,22 @@ exports.getSingleTrans = function(req, res){
 function errorhandler(res, err){
 	res.status(500);
 	res.send({error:err});
+}
+
+function transCleanup(sender, recipient, trans, resultCode){
+	if (resultCode == 200){
+		Trans.update({_id: trans._id}, {$set: {status: "Completed"}}, function(err, numdocs){
+			if (err) errorhandler(res, err);
+		});
+		User.update({_id: trans.senderId}, {$inc: {spend: trans.amount}}, function(err, numdocs){
+			if (err) errorhandler(res, err);
+		});
+		User.update({_id: trans.recipientId}, {$inc: {receive: trans.amount}}, function(err, numdocs){
+			if (err) errorhandler(res, err);
+		});
+	} else {
+		Trans.update({_id: trans._id}, {$set: {status: "Rejected"}}, function(err, numdocs){
+			if (err) errorhandler(res, err);
+		});
+	}
 }
