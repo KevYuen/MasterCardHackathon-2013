@@ -89,7 +89,7 @@ exports.updateTrans = function(req, res){
                     		seconds: utils.getSeconds(),
                     		sender_card: sender.cards[0].cardNumber,
                     		sender_month: (sender.cards[0].expiryMonth < 10) ? "0" + sender.cards[0].expiryMonth : sender.cards[0].expiryMonth,
-                    		sender_year: sender.cards[0].expiryYear,
+                    		sender_year: "20" + sender.cards[0].expiryYear,
                     		sender_name: sender.name,
                     		amount: trans.amount,
                     		receiver_name: recipient.name,
