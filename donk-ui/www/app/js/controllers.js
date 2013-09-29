@@ -216,9 +216,11 @@ angular.module('myApp.controllers', []).
   	Trans.getTransaction( $routeParams.transId ).then(
   		function( data ) {
   			$scope.trans = data;
+  			$('#incomingRequest').modal({ backdrop: 'static' });
   		},
   		function( data ) {
   			$scope.error = data;
+  			$('#incomingRequest').modal({ backdrop: 'static' });
   		}
 		);
 
