@@ -19,7 +19,7 @@ angular.module('myApp.services', [])
 
       getTransactions: function() {
         var deferred = $q.defer(),
-          url = API_DOMAIN + '/user/' + User.userId + '/trans',
+          url = API_DOMAIN + '/user/' + User.userId + '/trans/recipient',
           that = this;
         $http({
           method: 'GET',
@@ -83,6 +83,44 @@ angular.module('myApp.services', [])
         Geo.saveLocation().then( onSuccess, onError );
 
         return deferred.promise;
+      },
+
+      updateTransaction: function( update ) {
+      	// TODO: Validate that an action is set in the update JSON data
+
+      	var deferred = $q.defer(),
+      		url = API_DOMAIN + '/user/' + User.userId + '/trans/' + this.currentTransaction._id,
+      		that = this;
+
+      	Geo.saveLocation().then(
+      		// Success
+      		function( position ) {
+      			update.geoLocation = position;
+      			deferred.notify( that.currentTransaction );
+
+		      	$http({
+		      		method: 'PUT',
+		      		url: url,
+		      		data: update
+		      	})
+		      	.success( function( data ) {
+		      		console.log( 'updateTransaction success: ' + JSON.stringify( data, undefined, 2 ) );
+		      		that.currentTransaction = data;
+		      		deferred.resolve( data );
+		      	})
+		      	.error( function( data ) {
+		      		console.log( 'updateTransaction error: ' + JSON.stringify( data, undefined, 2 ) );
+		      		deferred.reject( data );
+		      	});
+      		},
+
+      		// Error
+      		function( resp ) {
+      			deferred.reject( resp );
+      		}
+    		);
+
+      	return deferred.promise;
       },
 
       getClosestBuyers: function() {
