@@ -107,6 +107,9 @@ exports.updateTrans = function(req, res){
                     	res.send(trans);
                     });
                 }catch(e){
+                	Trans.update(conditions, {$set:{status:"Error"}}, function(err, numdocs){
+                		if (err) errorhandler(res, err);
+                	});
                 	res.status(500);
                 	res.send({error:e});
                 }
@@ -114,12 +117,18 @@ exports.updateTrans = function(req, res){
              });
         }); 
 
-	} else if (action == "Cancel"){
+	} else if (action == "Reject"){
 		//cancel the transaction
 		Trans.update(conditions, {$set: {status: "Rejected"}}, function(err){
 			if (err) errorhandler(res, err);
-			res.send({executionMessage: "Transaction Canceled"});
+			res.send({executionMessage: "Transaction rejected"});
 		});
+	}else if (action == "Cancel"){
+		Trans.remove(conditions, function(err){
+			if (err) errorhandler(res, err);
+			res.send({executionMessage: "Transaction Deleted"});
+		});
+
 	} else {
 		res.status(400);
 		res.send({error:"Invalid action"});
