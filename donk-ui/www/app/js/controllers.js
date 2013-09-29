@@ -85,7 +85,7 @@ angular.module('myApp.controllers', []).
     $scope.user = User;
 
   })
-  .controller('LogInCtrl', function($scope, User){
+  .controller('LogInCtrl', function($scope, User, API_DOMAIN){
     $scope.email = '';
     $scope.password = '';
     $scope.logInError = false;
@@ -100,11 +100,41 @@ angular.module('myApp.controllers', []).
       $scope.canRecieve = !!recieve;
     };  
   })
-  .controller('SignUpCtrl', function($scope){
+  .controller('SignUpCtrl', function($scope, API_DOMAIN, $http){
     $scope.signUp = function(){
       //Create the user
+      $http({
+        method: 'POST',
+        url: API_DOMAIN + '/user/create',
+        data: {
+          email: $scope.email,
+          password: $scope.password,
+          address: $scope.address
+        }
+      })
       //Add the credit card
+      .then(function(response){
+        var user_id = response.data.id;
+
+        var expiry_array = $scope.expiry.split('/');
+        console.log(expiry_array);
+
+        return $http({
+          method: 'POST',
+          url: API_DOMAIN + '/user/' + user_id + '/card/add',
+          data: {
+            cardNumber: $scope.cardNumber,
+            expiryMonth: expiry_array[0],
+            expiryYear: expiry_array[1]
+          }
+        });
+      })
       //Sign in
+      .then(function(response){
+        User.logIn($scope.email, $scope.password, function(response){
+          console.log(response);
+        });
+      });
     }
   })
   ;

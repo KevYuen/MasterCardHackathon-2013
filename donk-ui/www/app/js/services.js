@@ -40,7 +40,8 @@ angular.module('myApp.services', [])
     return service;
 
   })
-  .factory('User', function($http){
+  .value('API_DOMAIN', 'http://ec2-54-227-22-178.compute-1.amazonaws.com')
+  .factory('User', function($http, API_DOMAIN){
     //data and functions related to logging in and out.
 
     var service = {
@@ -51,14 +52,14 @@ angular.module('myApp.services', [])
     };
 
     var logIn = function(email, password, errorCallBack){
-      var url = 'http://ec2-54-227-22-178.compute-1.amazonaws.com/user/login';
+      var url = API_DOMAIN + '/user/login';
       $http({
         method: 'POST',
         url: url,
         data: {
           'email': email,
           'password': password
-        },
+        }
       }).then(function(response){
         service.email = response.data.email;
         service.isLoggedIn = true;
