@@ -25,5 +25,5 @@ angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives', 
     $routeProvider.when('/trans/response/:transId', 
     	{ templateUrl: 'partials/response.html',  controller: 'TransRespCtrl' }
   	);
-    $routeProvider.otherwise({redirectTo: '/view1'});
+    $routeProvider.otherwise({redirectTo: '/balance'});
   }]);

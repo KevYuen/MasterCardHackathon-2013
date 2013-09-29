@@ -350,5 +350,14 @@ angular.module('myApp.controllers', []).
   })
   .controller('BalanceCtrl', function($scope, User){
     $scope.user = User;
+    if ( User.isLogged ) {
+    	User.getUser( User.userId ).then(
+    		function( userData ) {
+    			userData.userId = userData._id;
+    			delete userData._id;
+    			$scope.user = userData;
+    		}
+  		);
+    }
   })
   ;
