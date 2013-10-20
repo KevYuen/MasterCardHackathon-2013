@@ -2,12 +2,12 @@
 	<div class="row spacer">
 		<div class="col-xs-12">
 			<ul class="list-group">
-				<li class="list-group-item" ng-repeat="transaction in transactions">
+				<li class="list-group-item" ng-repeat="trans in transactions" ng-click="selectTrans($event)" data-trans-status="{{ trans.status }}" data-trans-id="{{ trans._id }}">
 			    <h4 class="list-group-item-heading">
-			    	{{ transaction.description }} - ${{ transaction.amount }}
+			    	{{ trans.description }}:	 ${{ trans.amount }}
 			  	</h4>
 			    <p class="list-group-item-text">
-			    	Status: {{ transaction.status }} // Date: {{ transaction.geoLocation.timestamp }}
+			    	Status: {{ trans.status }} // Date: {{ trans.geoLocation.timestamp }}
 			    </p>
 				</li>
 			</ul>
