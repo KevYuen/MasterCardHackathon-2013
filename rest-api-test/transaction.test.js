@@ -1,6 +1,5 @@
 var superagent = require('superagent'),
-    expect = require('expect.js'),
-    http = require('support/http');
+    expect = require('expect.js');
 
 var serverUrl = "http://ec2-54-227-22-178.compute-1.amazonaws.com/";
 
